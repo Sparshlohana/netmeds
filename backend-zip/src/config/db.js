@@ -1,8 +1,8 @@
-const mongoose = require("mongoose")
+require("dotenv").config();
+const mongoose = require("mongoose");
 
-const mongoDbUrl='mongodb+srv://codewithzosh:lognBCBmtWNPjrKC@cluster0.wvt9jpw.mongodb.net/?retryWrites=true&w=majority'
-const connectDb=()=>{
-    return mongoose.connect(mongoDbUrl)
-}
+const mongoDbUrl = "mongodb://localhost:27017/ecom";
 
-module.exports={connectDb}
+const connectDb = () => mongoose.connect(mongoDbUrl);
+
+module.exports = { connectDb };

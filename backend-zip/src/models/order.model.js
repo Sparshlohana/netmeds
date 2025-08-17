@@ -2,11 +2,9 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const orderSchema = new Schema({
-
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
-    // required: true,
   },
   orderItems: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -24,20 +22,18 @@ const orderSchema = new Schema({
     ref: 'addresses',
   },
   paymentDetails: {
-    
     paymentMethod: {
       type: String,
     },
     transactionId: {
       type: String,
     },
-    paymentId:{
-      type:String,
+    paymentId: {
+      type: String,
     },
-    paymentStatus:{
-      type:String
+    paymentStatus: {
+      type: String,
     }
-    
   },
   totalPrice: {
     type: Number,
@@ -47,9 +43,13 @@ const orderSchema = new Schema({
     type: Number,
     required: true,
   },
-  discounte: {
+  discount: {
     type: Number,
     required: true,
+  },
+  promoCode: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'promoCodes',
   },
   orderStatus: {
     type: String,

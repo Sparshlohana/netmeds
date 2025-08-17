@@ -1,11 +1,12 @@
-const express=require("express");
+const express = require("express");
 const authenticate = require("../middleware/authenticat.js");
-const router=express.Router();
-const orderController=require("../controllers/order.controller.js")
+const router = express.Router();
+const orderController = require("../controllers/order.controller.js")
 
-router.post("/",authenticate,orderController.createOrder);
-router.get("/user",authenticate,orderController.orderHistory);
-router.get("/:id",authenticate,orderController.findOrderById);
+router.post("/", authenticate, orderController.createOrder);
+router.get("/user", authenticate, orderController.orderHistory);
+router.get("/:id", authenticate, orderController.findOrderById);
+router.post("/:orderId/apply-promo", authenticate, orderController.applyPromoCode);
 
 
-module.exports=router;
+module.exports = router;

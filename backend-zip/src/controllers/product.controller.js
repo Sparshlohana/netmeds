@@ -88,12 +88,23 @@ async function getAllProducts(req, res) {
   }
 }
 
-const createMultipleProduct= async (req, res) => {
+const createMultipleProduct = async (req, res) => {
   try {
     await productService.createMultipleProduct(req.body)
     res
       .status(202)
       .json({ message: "Products Created Successfully", success: true });
+  } catch (error) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+const deleteAllProducts = async (req, res) => {
+  try {
+    await productService.deleteAllProducts();
+    res
+      .status(202)
+      .json({ message: "All Products Deleted Successfully", success: true });
   } catch (error) {
     res.status(500).json({ error: "Something went wrong" });
   }
@@ -107,6 +118,6 @@ module.exports = {
   findProductById,
   findProductByCategory,
   searchProduct,
-  createMultipleProduct
-
+  createMultipleProduct,
+  deleteAllProducts
 };

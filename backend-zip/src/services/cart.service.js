@@ -13,12 +13,12 @@ async function createCart(user) {
 
 // Find a user's cart and update cart details
 async function findUserCart(userId) {
-  let cart =await Cart.findOne({ user: userId })
-  
-  let cartItems=await CartItem.find({cart:cart._id}).populate("product")
+  let cart = await Cart.findOne({ user: userId })
 
-  cart.cartItems=cartItems
-  
+  let cartItems = await CartItem.find({ cart: cart._id }).populate("product")
+
+  cart.cartItems = cartItems
+
 
   let totalPrice = 0;
   let totalDiscountedPrice = 0;
@@ -41,12 +41,17 @@ async function findUserCart(userId) {
 
 // Add an item to the user's cart
 async function addCartItem(userId, req) {
- 
   const cart = await Cart.findOne({ user: userId });
   const product = await Product.findById(req.productId);
 
-  const isPresent = await CartItem.findOne({ cart: cart._id, product: product._id, userId });
-  
+  // Modify the isPresent check to include size and any other attributes like color
+  const isPresent = await CartItem.findOne({
+    cart: cart._id,
+    product: product._id,
+    userId,
+    size: req.size, // Check for the same size
+    color: req.color // Add a color check if applicable
+  });
 
   if (!isPresent) {
     const cartItem = new CartItem({
@@ -56,10 +61,9 @@ async function addCartItem(userId, req) {
       userId,
       price: product.discountedPrice,
       size: req.size,
-      discountedPrice:product.discountedPrice
+      color: req.color, // Save the color if applicable
+      discountedPrice: product.discountedPrice
     });
-
-   
 
     const createdCartItem = await cartItem.save();
     cart.cartItems.push(createdCartItem);
