@@ -62,7 +62,8 @@ import PaymentAccounts from "./Tables/CashAndBank/PaymentAccounts";
 import ManageCheques from "./Tables/CashAndBank/ManageCheques";
 import BranchTransfer from "./Tables/BranchTransfer";
 import StockAudit from "./Tables/StockAudit";
-import ControlCenter from "./Tables/ControlCenter";
+import ControlCenter from "./Tables/ControlCenter/ControlCenter.jsx";
+import UsersAndDevices from "./Tables/ControlCenter/UsersAndDevices.jsx";
 import InstallOnDesktop from "./Tables/InstallOnDesktop";
 import CreateCategory from "./Categories/CreateCategory.jsx";
 import CategoriesAdmin from "./Categories/CategoriesAdmin.jsx";
@@ -78,6 +79,7 @@ const drawerWidth = 240;
 
 const menu = [
   { name: "Dashboard", path: "/admin/dashboard", icon: <DashboardIcon /> },
+
   {
     name: "Products",
     icon: <InventoryIcon />,
@@ -86,6 +88,7 @@ const menu = [
       { name: "Add Product", path: "/admin/product/create", icon: <AddBoxIcon /> },
     ],
   },
+
   {
     name: "Categories",
     icon: <InventoryIcon />,
@@ -94,6 +97,7 @@ const menu = [
       { name: "Add Category", path: "/admin/category/create", icon: <AddBoxIcon /> },
     ],
   },
+
   {
     name: "Invoices",
     icon: <ReceiptIcon />,
@@ -104,11 +108,13 @@ const menu = [
       { name: "Purchase Returns", path: "/admin/invoices/purchase-returns", icon: <MoneyOffIcon /> },
     ],
   },
+
   { name: "Customer Orders", path: "/admin/customer-orders", icon: <ShoppingCartIcon /> },
   { name: "Orderbook", path: "/admin/orderbook", icon: <BookIcon /> },
   { name: "Business Reports", path: "/admin/business-reports", icon: <ArticleIcon /> },
   { name: "Patient Followups", path: "/admin/patient-followups", icon: <PersonIcon /> },
   { name: "Expenses", path: "/admin/expenses", icon: <AttachMoneyIcon /> },
+
   {
     name: "Cash and Bank",
     icon: <AccountBalanceWalletIcon />,
@@ -117,9 +123,20 @@ const menu = [
       { name: "Manage Cheques", path: "/admin/cash-bank/manage-cheques", icon: <ReceiptLongIcon /> },
     ],
   },
+
   { name: "Branch Transfer", path: "/admin/branch-transfer", icon: <CompareArrowsIcon /> },
   { name: "Stock Audit", path: "/admin/stock-audit", icon: <CheckCircleIcon /> },
-  { name: "Control Center", path: "/admin/control-center", icon: <SettingsIcon /> },
+
+  // 🔽 Changed Control Center to dropdown
+  {
+    name: "Control Center",
+    icon: <SettingsIcon />,
+    subheadings: [
+      { name: "Control Center", path: "/admin/control-center", icon: <SettingsIcon /> },
+      { name: "Users and Devices", path: "/admin/control-center/users-devices", icon: <PersonIcon /> },
+    ],
+  },
+
   { name: "Install on Desktop", path: "/admin/install", icon: <ComputerIcon /> },
 ];
 
@@ -329,7 +346,11 @@ export default function AdminPannel() {
             <Route path="/cash-bank/manage-cheques" element={<ManageCheques />} />
             <Route path="/branch-transfer" element={<BranchTransfer />} />
             <Route path="/stock-audit" element={<StockAudit />} />
+
+            {/* 🔽 Control Center submenu */}
             <Route path="/control-center" element={<ControlCenter />} />
+            <Route path="/control-center/users-devices" element={<UsersAndDevices />} />
+
             <Route path="/install" element={<InstallOnDesktop />} />
 
             {/* Extra pages you imported (paths unchanged) */}
