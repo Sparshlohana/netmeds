@@ -7,7 +7,7 @@ import LoginUserForm from "./Login";     // Assuming path: components/Auth/Login
 import OTPVerificationPage from "./OTPVerificationPage"; // Assuming path: components/Auth/OTPVerificationPage.jsx
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux"; // useDispatch is still needed for other Redux interactions if any
+import { useSelector, useDispatch } from "react-redux";
 import { Alert, Snackbar } from "@mui/material";
 
 // Removed: import { register as registerAction } from "../../Redux/Auth/Action";
@@ -28,10 +28,11 @@ export default function AuthModal({ handleClose, open }) {
   const location = useLocation();
   const { auth } = useSelector((store) => store);
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // useDispatch is kept in case it's used elsewhere in AuthModal
+  const dispatch = useDispatch();
 
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [userPhoneNumber, setUserPhoneNumber] = useState(''); // State to store phone number for OTP
+  const [userEmail, setUserEmail] = useState(''); // State to store email for OTP page display
   const [userRegistrationData, setUserRegistrationData] = useState(null); // State to store full registration data
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -56,26 +57,28 @@ export default function AuthModal({ handleClose, open }) {
   }, [auth.user, auth.error, handleClose, navigate]);
 
   // Callback from RegisterUserForm after initial submission
-  const handleRegistrationSuccess = (phoneNumber, registrationData) => {
+  // Now accepts email as the second argument
+  const handleRegistrationSuccess = (phoneNumber, email, registrationData) => {
     setUserPhoneNumber(phoneNumber);
+    setUserEmail(email); // Store the email
     setUserRegistrationData(registrationData); // Store full data for later use if needed
     setShowOtpInput(true);
-    setSnackbarMessage(`OTP sent to ${phoneNumber}!`);
+    // Changed message to use email
+    setSnackbarMessage(`OTP sent to ${email}!`); 
     setSnackbarSeverity("info");
     setOpenSnackbar(true);
   };
 
   // Callback from OTPVerificationPage after successful OTP verification
   const handleOtpVerified = () => {
-    // With `registerAction` removed, this function now primarily signals
-    // that the OTP step is complete. The expectation is that the
-    // authentication (which updates `auth.user`) has either already
-    // happened or will be triggered by a separate mechanism (e.g.,
-    // the backend responding to the OTP verification with a session token).
-    // The `useEffect` above will then handle the final redirection based on `auth.user`.
+    // In a real application, you would dispatch the actual registration/login action here
+    // using userRegistrationData, or confirm the session if it's a login flow.
+    // For this mock setup, we just log and rely on the auth.user effect for redirection.
     console.log("OTP verified. Proceeding with user flow.");
-    // You might want to explicitly close the modal here if not relying solely on auth.user update
-    // handleClose();
+    // If you need to dispatch a registration action here, you'd do:
+    // if (userRegistrationData) {
+    //   dispatch(registerAction(userRegistrationData)); // Assuming registerAction is available
+    // }
   };
 
   const handleCloseSnackbar = () => {
@@ -95,7 +98,9 @@ export default function AuthModal({ handleClose, open }) {
           {showOtpInput ? (
             <OTPVerificationPage 
               phoneNumber={userPhoneNumber} 
+              email={userEmail} // Pass email to OTPVerificationPage
               onOtpVerified={handleOtpVerified} 
+              handleCloseModal={handleClose} // Pass handleClose to OTP page for its close button
             />
           ) : location.pathname === "/login" ? (
             <LoginUserForm onAuthSuccess={() => console.log("Login form submitted, handle OTP if needed.")} />

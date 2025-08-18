@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUser, register } from "../../../Redux/Auth/Action"; // Adjust path
 import { Fragment, useEffect, useState } from "react";
 
-// Add a new prop: onRegistrationSuccess to pass phone number
+// onRegistrationSuccess now expects phoneNumber, email, and full registrationData
 export default function RegisterUserForm({ onRegistrationSuccess }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,11 +20,8 @@ export default function RegisterUserForm({ onRegistrationSuccess }) {
     }
   }, [jwt, dispatch]);
 
-  // This effect now only handles Redux user/error state, not direct OTP transition
-  // The transition to OTP will be handled by onRegistrationSuccess callback
   useEffect(() => {
     if (auth.error) {
-      // Handle registration error if needed (e.g., show snackbar in AuthModal)
       console.error("Registration error:", auth.error);
     }
   }, [auth.error]);
@@ -38,22 +35,21 @@ export default function RegisterUserForm({ onRegistrationSuccess }) {
       lastName: data.get("lastName"),
       email: data.get("email"),
       password: data.get("password"),
-      phoneNumber: data.get("phoneNumber"), // Get phone number
+      phoneNumber: data.get("phoneNumber"),
     };
     console.log("User registration data:", userData);
 
-    // Simulate sending OTP and then transition to OTP page
-    // In a real app, you'd make an API call here to send OTP
-    alert(`OTP sent to ${userData.phoneNumber}! (Simulated)`);
+    // Simulate sending OTP (in a real app, this would be an API call)
+    alert(`OTP sent to ${userData.email}! (Simulated)`); // Alert uses email
 
-    // Call the callback to signal successful initial registration and pass phone number
+    // Call the callback to signal successful initial registration
+    // Pass phoneNumber, email, and the full userData object
     if (onRegistrationSuccess) {
-      onRegistrationSuccess(userData.phoneNumber);
+      onRegistrationSuccess(userData.phoneNumber, userData.email, userData); 
     }
 
     // Do NOT dispatch register here if OTP is a pre-auth step.
-    // Dispatch register ONLY after OTP is successfully verified.
-    // For now, we'll simulate dispatching after OTP is done in AuthModal.
+    // Dispatch register ONLY after OTP is successfully verified in AuthModal.
   };
 
   return (
@@ -89,7 +85,7 @@ export default function RegisterUserForm({ onRegistrationSuccess }) {
               label="Email"
               fullWidth
               autoComplete="email"
-              type="email" // Ensure email type
+              type="email"
             />
           </Grid>
           <Grid item xs={12}>
@@ -99,9 +95,9 @@ export default function RegisterUserForm({ onRegistrationSuccess }) {
               name="phoneNumber"
               label="Phone Number"
               fullWidth
-              autoComplete="tel" // Autocomplete for phone numbers
-              type="tel" // Input type for telephone numbers
-              inputProps={{ maxLength: 10 }} // Max length for 10-digit numbers
+              autoComplete="tel"
+              type="tel"
+              inputProps={{ maxLength: 10 }}
             />
           </Grid>
           <Grid item xs={12}>
