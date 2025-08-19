@@ -1,67 +1,81 @@
+// Admin/them/customeThem.js
+
 import { createTheme } from "@mui/material/styles";
+import { green } from "@mui/material/colors";
+
+// This is the new theme for the lighter color scheme
+const customerTheme = createTheme({
+  palette: {
+    mode: "light",
+    primary: {
+      main: green[600], // Dark green for primary actions
+    },
+    secondary: {
+      main: "#f48fb1",
+    },
+    white: {
+      main: "#fff",
+    },
+    orange: {
+      main: "#ffdb0f",
+    },
+    background: {
+      default: "#F5F5F5", // Light gray background
+      paper: "#FFFFFF", // White for cards and surfaces
+    },
+    text: {
+      primary: "#1A1A1A", // Black for main text
+      secondary: "#424242", // Dark gray for secondary text
+    },
+  },
+  components: {
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          "&.Mui-selected": {
+            backgroundColor: green[50], // Very light green for selected items
+            "&:hover": {
+              backgroundColor: green[100],
+            },
+          },
+        },
+      },
+    },
+  },
+});
 
 const customTheme = createTheme({
   palette: {
-    mode: "dark", // Set the custom color mode name here
+    mode: "dark",
     primary: {
-      main: '#9155FD',
+      main: "#9155FD",
     },
     secondary: {
-      main: '#f48fb1',
+      main: "#f48fb1",
     },
-    white:{
-      main:"#fff"
+    white: {
+      main: "#fff",
     },
-    orange:{
-      main:"#ffdb0f"
+    orange: {
+      main: "#ffdb0f",
     },
-    
     background: {
-      default: '',
-      // paper: '#121019',
-      paper:"rgb(0, 0, 22)"
+      default: "",
+      paper: "rgb(0, 0, 22)",
     },
   },
- 
-  
 });
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
     primary: {
-      main: '#9155FD',
+      main: "#9155FD",
     },
     secondary: {
-      main: '#f48fb1',
+      main: "#f48fb1",
     },
   },
 });
 
-const customerTheme = createTheme({
-  palette: {
-    mode: "light", // Set the custom color mode name here
-    primary: {
-      main: '#9155FD',
-    },
-    secondary: {
-      main: '#f48fb1',
-    },
-    white:{
-      main:"#fff"
-    },
-    orange:{
-      main:"#ffdb0f"
-    },
-    
-    background: {
-      default: '',
-      // paper: '#121019',
-      paper:"white"
-    },
-  },
- 
-  
-});
-
-export {customTheme,darkTheme,customerTheme};
+export { customTheme, darkTheme, customerTheme };

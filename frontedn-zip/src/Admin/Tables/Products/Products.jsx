@@ -1,3 +1,4 @@
+// Admin/Views/Products.jsx
 
 import {
   Avatar,
@@ -22,7 +23,8 @@ import {
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { styled } from '@mui/material/styles'; // Import styled for custom components
+import { styled } from '@mui/material/styles';
+import { green } from "@mui/material/colors";
 
 // Mock data for products and categories
 const mockProducts = {
@@ -34,8 +36,8 @@ const mockProducts = {
     { _id: "prod5", imageUrl: "https://placehold.co/56x56/FF00FF/FFFFFF?text=P5", title: "Coffee Maker", brand: "HomeBrew", discountedPrice: 45.00, price: 60.00, category: { _id: "cat3", name: "Home Goods" }, sizes: [{ size: "Std", quantity: 2 }] },
     { _id: "prod6", imageUrl: "https://placehold.co/56x56/00FFFF/000000?text=P6", title: "Vitamin C", brand: "HealthSupp", discountedPrice: 12.00, price: 15.00, category: { _id: "cat4", name: "Pharmacy" }, sizes: [{ size: "100ct", quantity: 15 }] },
   ],
-  totalPages: 2, // Example total pages
-  totalElements: 12, // Example total elements
+  totalPages: 2,
+  totalElements: 12,
 };
 
 const mockCategories = [
@@ -46,14 +48,15 @@ const mockCategories = [
 ];
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
-  '& .MuiInputLabel-root': { color: 'gray' },
+  '& .MuiInputLabel-root': { color: '#757575' },
   '& .MuiOutlinedInput-root': {
-    color: 'white',
-    '& fieldset': { borderColor: '#333' },
-    '&:hover fieldset': { borderColor: '#555' },
-    '&.Mui-focused fieldset': { borderColor: '#f06292' },
+    color: 'black',
+    backgroundColor: '#FFFFFF',
+    '& fieldset': { borderColor: '#E0E0E0' },
+    '&:hover fieldset': { borderColor: '#BDBDBD' },
+    '&.Mui-focused fieldset': { borderColor: green[500] },
   },
-  '& .MuiSelect-icon': { color: 'gray' },
+  '& .MuiSelect-icon': { color: '#757575' },
 }));
 
 const Products = () => {
@@ -77,7 +80,6 @@ const Products = () => {
   const sort = searchParams.get("sort");
   const page = searchParams.get("page");
 
-  // Simulate fetching categories
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -87,37 +89,33 @@ const Products = () => {
     }, 300);
   }, []);
 
-  // Simulate fetching products based on filters and pagination
   useEffect(() => {
     setLoading(true);
     setError(null);
     setTimeout(() => {
       let filtered = [...mockProducts.content];
 
-      // Apply category filter
       if (category || filterValue.category) {
         const selectedCategoryId = category || filterValue.category;
         filtered = filtered.filter(p => p.category?._id === selectedCategoryId);
       }
 
-      // Apply availability filter
       if (availability === "in_stock") {
         filtered = filtered.filter(p => {
           const totalQty = p.colors.length > 0
             ? p.colors.reduce((total, color) => total + color.sizes.reduce((sum, size) => sum + size.quantity, 0), 0)
-            : p.sizes.reduce((total, size) => total + size.quantity, 0);
+            : (p.sizes ? p.sizes.reduce((total, size) => total + size.quantity, 0) : 0);
           return totalQty > 0;
         });
       } else if (availability === "out_of_stock") {
         filtered = filtered.filter(p => {
           const totalQty = p.colors.length > 0
             ? p.colors.reduce((total, color) => total + color.sizes.reduce((sum, size) => sum + size.quantity, 0), 0)
-            : p.sizes.reduce((total, size) => total + size.quantity, 0);
+            : (p.sizes ? p.sizes.reduce((total, size) => total + size.quantity, 0) : 0);
           return totalQty === 0;
         });
       }
 
-      // Apply sorting
       const currentSort = sort || filterValue.sort || "price_low";
       filtered.sort((a, b) => {
         if (currentSort === "price_low") return a.discountedPrice - b.discountedPrice;
@@ -127,7 +125,6 @@ const Products = () => {
         return 0;
       });
 
-      // Simulate pagination
       const currentPage = parseInt(page) || 1;
       const pageSize = 10;
       const startIndex = (currentPage - 1) * pageSize;
@@ -157,14 +154,13 @@ const Products = () => {
     setFilterValue((values) => ({ ...values, [sectionId]: value }));
 
     searchParams.set(sectionId, value);
-    searchParams.set("page", 1); // Reset to first page on filter change
+    searchParams.set("page", 1);
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
   };
 
   const handleDeleteProduct = (productId) => {
     if (window.confirm(`Are you sure you want to delete product with ID: ${productId}?`)) {
-      // Simulate deletion
       setProductsData(prev => ({
         products: {
           ...prev.products,
@@ -181,7 +177,6 @@ const Products = () => {
 
   const handleDeleteAllProducts = async () => {
     if (window.confirm("Are you sure you want to delete all products? This action cannot be undone.")) {
-      // Simulate deleting all products
       setProductsData(prev => ({
         products: {
           ...prev.products,
@@ -193,17 +188,17 @@ const Products = () => {
   };
 
   return (
-    <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white' }}>
-      <Typography variant="h5" component="h1" sx={{ mb: 1, fontWeight: 'bold' }}>
+    <Box sx={{ p: 3, backgroundColor: '#F5F5F5', minHeight: 'calc(100vh - 64px)', color: 'black' }}>
+      <Typography variant="h5" component="h1" sx={{ mb: 1, fontWeight: 'bold', color: 'darkgreen' }}>
         Products Listing
       </Typography>
-      <Typography variant="body2" sx={{ color: 'gray', mb: 3 }}>
+      <Typography variant="body2" sx={{ color: '#444', mb: 3 }}>
         Manage your product inventory
       </Typography>
 
-      <Card sx={{ p: 3, backgroundColor: '#1b1b36', borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f', mb: 4 }}>
+      <Card sx={{ p: 3, backgroundColor: '#FFFFFF', borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0', mb: 4 }}>
         <CardHeader
-          title={<Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>Sort & Filter Products</Typography>}
+          title={<Typography variant="h6" sx={{ color: 'darkgreen', fontWeight: 'bold' }}>Sort & Filter Products</Typography>}
           sx={{ pt: 0, "& .MuiCardHeader-action": { mt: 0.6 } }}
         />
         <Grid container spacing={2}>
@@ -218,7 +213,7 @@ const Products = () => {
                 onChange={(e) => handleFilterChange(e, "category")}
               >
                 {categoriesData?.categories?.map((item) => (
-                  <MenuItem key={item._id} value={item._id} sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>
+                  <MenuItem key={item._id} value={item._id} sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>
                     {item.name}
                   </MenuItem>
                 ))}
@@ -235,10 +230,10 @@ const Products = () => {
                 label="Sort By"
                 onChange={(e) => handleFilterChange(e, "sort")}
               >
-                <MenuItem value="price_low" sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Price: Low to High</MenuItem>
-                <MenuItem value="price_high" sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Price: High to Low</MenuItem>
-                <MenuItem value="name_asc" sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Name: A-Z</MenuItem>
-                <MenuItem value="name_desc" sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Name: Z-A</MenuItem>
+                <MenuItem value="price_low" sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>Price: Low to High</MenuItem>
+                <MenuItem value="price_high" sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>Price: High to Low</MenuItem>
+                <MenuItem value="name_asc" sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>Name: A-Z</MenuItem>
+                <MenuItem value="name_desc" sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>Name: Z-A</MenuItem>
               </Select>
             </StyledFormControl>
           </Grid>
@@ -252,18 +247,18 @@ const Products = () => {
                 label="Availability"
                 onChange={(e) => handleFilterChange(e, "availability")}
               >
-                <MenuItem value="" sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>All</MenuItem>
-                <MenuItem value="in_stock" sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>In Stock</MenuItem>
-                <MenuItem value="out_of_stock" sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Out of Stock</MenuItem>
+                <MenuItem value="" sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>All</MenuItem>
+                <MenuItem value="in_stock" sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>In Stock</MenuItem>
+                <MenuItem value="out_of_stock" sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>Out of Stock</MenuItem>
               </Select>
             </StyledFormControl>
           </Grid>
         </Grid>
       </Card>
 
-      <Card sx={{ backgroundColor: '#1b1b36', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f' }}>
+      <Card sx={{ backgroundColor: '#FFFFFF', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0' }}>
         <CardHeader
-          title={<Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>All Products</Typography>}
+          title={<Typography variant="h6" sx={{ color: 'darkgreen', fontWeight: 'bold' }}>All Products</Typography>}
           sx={{ pt: 2, "& .MuiCardHeader-action": { mt: 0.6 } }}
           action={
             <Button
@@ -276,67 +271,85 @@ const Products = () => {
           }
         />
         <TableContainer sx={{ mt: 2 }}>
-          <Table sx={{ minWidth: 800 }} aria-label="products table">
+          <Table sx={{ minWidth: 800, tableLayout: 'fixed' }} aria-label="products table">
             <TableHead>
-              <TableRow sx={{ borderBottom: '1px solid #333' }}>
-                <TableCell sx={{ color: 'gray', fontWeight: 'bold' }}>Image</TableCell>
-                <TableCell sx={{ color: 'gray', fontWeight: 'bold' }}>Title</TableCell>
-                <TableCell sx={{ textAlign: "center", color: 'gray', fontWeight: 'bold' }}>Category</TableCell>
-                <TableCell sx={{ textAlign: "center", color: 'gray', fontWeight: 'bold' }}>Price</TableCell>
-                <TableCell sx={{ textAlign: "center", color: 'gray', fontWeight: 'bold' }}>Quantity</TableCell>
-                <TableCell sx={{ textAlign: "center", color: 'gray', fontWeight: 'bold' }}>Delete</TableCell>
-                <TableCell sx={{ textAlign: "center", color: 'gray', fontWeight: 'bold' }}>Update</TableCell>
+              <TableRow sx={{ borderBottom: '1px solid #E0E0E0' }}>
+                <TableCell sx={{ color: 'darkgreen', fontWeight: 'bold' }}>Image</TableCell>
+                <TableCell sx={{ color: 'darkgreen', fontWeight: 'bold' }}>Title</TableCell>
+                <TableCell sx={{ textAlign: "center", color: 'darkgreen', fontWeight: 'bold' }}>Category</TableCell>
+                <TableCell sx={{ textAlign: "center", color: 'darkgreen', fontWeight: 'bold' }}>Price</TableCell>
+                <TableCell sx={{ textAlign: "center", color: 'darkgreen', fontWeight: 'bold' }}>Quantity</TableCell>
+                <TableCell sx={{ textAlign: "center", color: 'darkgreen', fontWeight: 'bold' }}>Delete</TableCell>
+                <TableCell sx={{ textAlign: "center", color: 'darkgreen', fontWeight: 'bold' }}>Update</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {productsData?.products?.content?.map((item) => (
-                <TableRow
-                  hover
-                  key={item._id}
-                  sx={{ "&:last-of-type td, &:last-of-type th": { border: 0 }, borderBottom: '1px solid #2e2e4f' }}
-                >
-                  <TableCell>
-                    <Avatar alt={item.title} src={item.imageUrl} sx={{ width: 56, height: 56 }} />
-                  </TableCell>
-                  <TableCell sx={{ py: (theme) => `${theme.spacing(0.5)} !important`, color: 'white' }}>
-                    <Box sx={{ display: "flex", flexDirection: "column" }}>
-                      <Typography
-                        sx={{
-                          fontWeight: 500,
-                          fontSize: "0.875rem !important",
-                          color: 'white'
-                        }}
+              {productsData?.products?.content?.length > 0 ? (
+                productsData.products.content.map((item) => (
+                  <TableRow
+                    hover
+                    key={item._id}
+                    sx={{ "&:last-of-type td, &:last-of-type th": { border: 0 }, borderBottom: '1px solid #E0E0E0' }}
+                  >
+                    <TableCell sx={{ width: '10%' }}>
+                      <Avatar alt={item.title} src={item.imageUrl} sx={{ width: 56, height: 56 }} />
+                    </TableCell>
+                    <TableCell sx={{ py: (theme) => `${theme.spacing(0.5)} !important`, color: 'black', width: '25%' }}>
+                      <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <Typography
+                          sx={{
+                            fontWeight: 500,
+                            fontSize: "0.875rem !important",
+                            color: 'black'
+                          }}
+                        >
+                          {item.title}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#616161' }}>{item.brand}</Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center", color: 'black', width: '15%' }}>{item.category?.name}</TableCell>
+                    <TableCell sx={{ textAlign: "center", color: 'black', width: '10%' }}>${item.discountedPrice}</TableCell>
+                    <TableCell sx={{ textAlign: "center", color: 'black', width: '10%' }}>
+                      {item.colors && item.colors.length > 0
+                        ? item.colors.reduce((total, color) =>
+                            total + color.sizes.reduce((sum, size) => sum + size.quantity, 0), 0)
+                        : (item.sizes ? item.sizes.reduce((total, size) => total + size.quantity, 0) : 0)}
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center", width: '15%' }}>
+                      <Button
+                        variant="text"
+                        onClick={() => handleDeleteProduct(item._id)}
+                        sx={{ color: '#f06292', '&:hover': { backgroundColor: 'rgba(240, 98, 146, 0.1)' } }}
                       >
-                        {item.title}
-                      </Typography>
-                      <Typography variant="caption" sx={{ color: 'gray' }}>{item.brand}</Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center", color: 'white' }}>{item.category?.name}</TableCell>
-                  <TableCell sx={{ textAlign: "center", color: 'white' }}>${item.discountedPrice}</TableCell>
-                  <TableCell sx={{ textAlign: "center", color: 'white' }}>
-                    {item.colors && item.colors.length > 0
-                      ? item.colors.reduce((total, color) =>
-                          total + color.sizes.reduce((sum, size) => sum + size.quantity, 0), 0)
-                      : (item.sizes ? item.sizes.reduce((total, size) => total + size.quantity, 0) : 0)}
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
-                    <Button variant="text" onClick={() => handleDeleteProduct(item._id)} sx={{ color: '#f06292', '&:hover': { backgroundColor: 'rgba(240, 98, 146, 0.1)' } }}>
-                      Delete
-                    </Button>
-                  </TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
-                    <Button variant="contained" onClick={() => handleUpdateProduct(item._id)} sx={{ backgroundColor: '#5e35b1', '&:hover': { backgroundColor: '#4527a0' }, textTransform: 'none', fontWeight: 'bold' }}>
-                      Update
-                    </Button>
+                        Delete
+                      </Button>
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center", width: '15%' }}>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleUpdateProduct(item._id)}
+                        sx={{ backgroundColor: green[600], '&:hover': { backgroundColor: green[700] }, textTransform: 'none', fontWeight: 'bold' }}
+                      >
+                        Update
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} align="center">
+                    <Typography variant="body1" sx={{ color: '#616161', mt: 2 }}>
+                      No products found.
+                    </Typography>
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
-      <Card sx={{ mt: 2, p: 2, backgroundColor: '#1b1b36', borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f' }}>
+      <Card sx={{ mt: 2, p: 2, backgroundColor: '#FFFFFF', borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0' }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
           <Pagination
             count={productsData.products?.totalPages || 1}
@@ -345,13 +358,13 @@ const Products = () => {
             onChange={handlePaginationChange}
             sx={{
               '& .MuiPaginationItem-root': {
-                color: 'white',
+                color: 'black',
               },
               '& .MuiPaginationItem-root.Mui-selected': {
-                backgroundColor: '#f06292',
+                backgroundColor: green[600],
                 color: 'white',
                 '&:hover': {
-                  backgroundColor: '#c8507a',
+                  backgroundColor: green[700],
                 },
               },
             }}

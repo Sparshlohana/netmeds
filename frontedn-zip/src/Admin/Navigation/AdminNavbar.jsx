@@ -1,4 +1,6 @@
-import { styled, alpha } from '@mui/material/styles';
+// AdminNavbar.jsx
+
+import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,8 +17,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import Button from '@mui/material/Button';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { logout } from '../../Redux/Auth/Action';
 import { useEffect, useState } from 'react';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { green } from '@mui/material/colors';
 
 // Custom styled components for the layout
 const RoleChip = styled('div')(() => ({
@@ -32,31 +33,31 @@ const RoleChip = styled('div')(() => ({
   gap: 6,
   padding: '6px 10px',
   borderRadius: 10,
-  background: 'rgba(255,255,255,0.12)',
+  background: 'rgba(0, 128, 0, 0.1)', // Light green background
   fontSize: 12,
   fontWeight: 700,
-  color: '#fff',
+  color: 'darkgreen',
 }));
 
 const RoundIconButton = styled(IconButton)(({ theme }) => ({
-  background: 'rgba(255,255,255,0.1)',
+  background: 'rgba(0, 128, 0, 0.1)',
   borderRadius: 999,
   width: 40,
   height: 40,
   marginLeft: 8,
-  color: '#fff',
-  '&:hover': { background: 'rgba(255,255,255,0.18)' },
+  color: 'darkgreen',
+  '&:hover': { background: 'rgba(0, 128, 0, 0.2)' },
 }));
 
 const UserInitialsButton = styled(IconButton)(({ theme }) => ({
-  background: 'rgba(255,255,255,0.2)',
+  background: green[700], // Dark green background
   borderRadius: 999,
   width: 40,
   height: 40,
   marginLeft: 8,
   color: '#fff',
   fontWeight: 800,
-  '&:hover': { background: 'rgba(255,255,255,0.3)' },
+  '&:hover': { background: green[800] },
 }));
 
 export default function AdminNavbar({ handleSideBarViewInMobile }) {
@@ -171,7 +172,7 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
             fontWeight: 700,
             borderRadius: 2,
             px: 2,
-            background: 'linear-gradient(90deg, rgba(236,72,153,1) 0%, rgba(168,85,247,1) 100%)',
+            background: green[600],
             width: '100%', // Make it full width in mobile menu
           }}
           onClick={() => { console.log('Get Online Orders Mobile'); handleMobileMenuClose(); }}
@@ -196,8 +197,9 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
         position="fixed"
         sx={{
           zIndex: (t) => t.zIndex.drawer + 1,
-          backgroundColor: 'rgb(0, 0, 22)',
+          backgroundColor: '#FFFFFF',
           boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
+          color: 'black',
         }}
       >
         <Toolbar sx={{ gap: 2, justifyContent: 'space-between' }}>
@@ -210,52 +212,35 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
                 color="inherit"
                 aria-label="open drawer"
                 onClick={handleSideBarViewInMobile}
+                sx={{ color: 'darkgreen' }}
               >
                 <MenuIcon />
               </IconButton>
             )}
             {/* Localwell Logo */}
-            <img 
-              src="/images/zedicines-10.png" 
-              alt="Localwell Logo" 
-              style={{ 
-                maxHeight: 40, // Responsive height
-                maxWidth: 45, // Responsive width
-                marginRight: 8, 
-                objectFit: 'contain' 
-              }} 
+            <img
+              src="/images/zedicines-10.png"
+              alt="Localwell Logo"
+              style={{
+                maxHeight: 80,
+                maxWidth: 85,
+                marginRight: 8,
+                objectFit: 'contain'
+              }}
             />
             {/* User/Store Info */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Box>
-                <Typography sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 700, lineHeight: 1.2, ml: 1.5 }}>
+                <Typography sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 700, lineHeight: 1.2, ml: 1.5, color: 'darkgreen' }}>
                   SANJEEVNI MEDIMALL
                 </Typography>
-                <Typography sx={{ fontSize: { xs: 10, sm: 12 }, opacity: 0.8, lineHeight: 1.2, ml: 1.5 }}>
+                <Typography sx={{ fontSize: { xs: 10, sm: 12 }, opacity: 0.8, lineHeight: 1.2, ml: 1.5, color: '#444' }}>
                   Kachchh, Gujarat - 370201
                 </Typography>
               </Box>
-              {isLargeScreen && <KeyboardArrowDownIcon sx={{ ml: 0.5, opacity: 0.9, cursor: 'pointer' }} />}
+              {isLargeScreen && <KeyboardArrowDownIcon sx={{ ml: 0.5, opacity: 0.9, cursor: 'pointer', color: 'darkgreen' }} />}
             </Box>
           </Box>
-
-          {/* Center: Tabs (currently commented out as per previous code) */}
-          {/* <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
-            <Tabs
-              value={tab}
-              onChange={handleTabChange}
-              textColor="inherit"
-              TabIndicatorProps={{ style: { backgroundColor: '#f06292', height: 3 } }}
-              sx={{
-                '& .MuiTab-root': { textTransform: 'none', fontWeight: 600, minWidth: 80, color: 'rgba(255,255,255,0.7)' },
-                '& .Mui-selected': { color: '#f48fb1 !important' },
-              }}
-            >
-              <Tab value="Purchases" label="Purchases" />
-              <Tab value="Stock" label="Stock" />
-              <Tab value="Sales" label="Sales" />
-            </Tabs>
-          </Box> */}
 
           {/* Right: Buttons and User */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}> {/* Hide on xs, sm */}
@@ -267,11 +252,10 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
                 fontWeight: 700,
                 borderRadius: 2,
                 px: 2,
-                background:
-                  'linear-gradient(90deg, rgba(236,72,153,1) 0%, rgba(168,85,247,1) 100%)',
+                backgroundColor: green[600],
+                color: 'white',
                 '&:hover': {
-                  background:
-                    'linear-gradient(90deg, rgba(236,72,153,0.9) 0%, rgba(168,85,247,0.9) 100%)',
+                  backgroundColor: green[700],
                 },
               }}
               onClick={() => { /* logic for online orders */ }}
@@ -280,18 +264,18 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
             </Button>
 
             {/* Round Icon Buttons */}
-            <RoundIconButton aria-label="search">
+            <RoundIconButton aria-label="search" sx={{ color: 'darkgreen', backgroundColor: 'rgba(0,128,0,0.1)' }}>
               <SearchIcon />
             </RoundIconButton>
-            <RoundIconButton aria-label="support">
+            <RoundIconButton aria-label="support" sx={{ color: 'darkgreen', backgroundColor: 'rgba(0,128,0,0.1)' }}>
               <SupportAgentIcon />
             </RoundIconButton>
-            <RoundIconButton aria-label="alerts">
+            <RoundIconButton aria-label="alerts" sx={{ color: 'darkgreen', backgroundColor: 'rgba(0,128,0,0.1)' }}>
               <Badge badgeContent={3} color="error">
                 <NotificationsNoneIcon />
               </Badge>
             </RoundIconButton>
-            <RoundIconButton aria-label="shortcut">
+            <RoundIconButton aria-label="shortcut" sx={{ color: 'darkgreen', backgroundColor: 'rgba(0,128,0,0.1)' }}>
               <KeyboardIcon />
             </RoundIconButton>
             <UserInitialsButton
@@ -299,6 +283,7 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
               aria-controls="primary-search-account-menu"
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
+              sx={{ backgroundColor: green[700], color: 'white' }}
             >
               <Typography sx={{ fontSize: 14, fontWeight: 800 }}>
                 {(auth.user?.firstName?.[0] || 'T').toUpperCase() + (auth.user?.lastName?.[0] || 'E').toUpperCase()}
@@ -315,6 +300,7 @@ export default function AdminNavbar({ handleSideBarViewInMobile }) {
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
               color="inherit"
+              sx={{ color: 'darkgreen' }}
             >
               <MoreIcon />
             </IconButton>

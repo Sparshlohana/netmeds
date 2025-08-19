@@ -3,8 +3,9 @@
 import { useState, useEffect, Fragment } from "react";
 import { Typography, Grid, TextField, Button, FormControl, InputLabel, Select, MenuItem, Box, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import DeleteIcon from '@mui/icons-material/Delete'; // Icon for removing color/size
-import { styled } from '@mui/material/styles'; // Import styled for custom components
+import DeleteIcon from '@mui/icons-material/Delete';
+import { styled } from '@mui/material/styles';
+import { green } from "@mui/material/colors";
 
 // Mock data for categories, since Redux actions are removed
 const mockCategories = [
@@ -22,52 +23,52 @@ const defaultSizes = [
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
-    color: 'white',
-    backgroundColor: '#1b1b36',
+    color: 'black',
+    backgroundColor: '#FFFFFF',
     borderRadius: '8px',
-    border: '1px solid #333',
+    border: '1px solid #E0E0E0',
     '& fieldset': {
       borderColor: 'transparent',
     },
     '&:hover fieldset': {
-      borderColor: 'transparent',
+      borderColor: '#BDBDBD',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#f06292',
+      borderColor: green[500],
     },
   },
   '& .MuiInputBase-input': {
     padding: '10px 14px',
-    color: 'white',
+    color: 'black',
   },
   '& .MuiInputAdornment-root': {
-    color: 'gray',
+    color: '#757575',
   },
   '& .MuiFormLabel-root': {
-    color: 'gray',
+    color: '#757575',
   },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
-  color: 'white',
-  backgroundColor: '#1b1b36',
+  color: 'black',
+  backgroundColor: '#FFFFFF',
   borderRadius: '8px',
-  border: '1px solid #333',
+  border: '1px solid #E0E0E0',
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: 'transparent',
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'transparent',
+    borderColor: '#BDBDBD',
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#f06292',
+    borderColor: green[500],
   },
   '& .MuiSelect-select': {
     padding: '10px 14px',
-    color: 'white',
+    color: 'black',
   },
   '& .MuiSvgIcon-root': {
-    color: 'gray',
+    color: '#757575',
   },
 }));
 
@@ -88,13 +89,11 @@ const CreateProduct = () => {
 
   const navigate = useNavigate();
 
-  // Using local state for categories and loading/error, as Redux is removed
   const [categories, setCategories] = useState({ categories: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulate fetching categories
     setLoading(true);
     setError(null);
     setTimeout(() => {
@@ -107,7 +106,6 @@ const CreateProduct = () => {
     const { name, value } = e.target;
     let updatedData = { ...productData, [name]: value };
 
-    // Automatically calculate discounted price if price or discount percentage changes
     if (name === "price" || name === "discountPersent") {
       const price = parseFloat(updatedData.price) || 0;
       const discountPersent = parseFloat(updatedData.discountPersent) || 0;
@@ -173,20 +171,17 @@ const CreateProduct = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // In a real application, you would send productData to your backend API here
     console.log("Submitting Product Data:", productData);
-    // Simulate API call success
     alert("Product added successfully! (Simulated)");
-    // Navigate to the products listing page after submission
     navigate("/admin/products");
   };
 
   return (
-    <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white' }}>
-      <Typography variant="h5" component="h1" sx={{ textAlign: "center", mb: 4, fontWeight: 'bold' }}>
+    <Box sx={{ p: 3, backgroundColor: '#F5F5F5', minHeight: 'calc(100vh - 64px)', color: 'black' }}>
+      <Typography variant="h5" component="h1" sx={{ textAlign: "center", mb: 4, fontWeight: 'bold', color: 'darkgreen' }}>
         Add New Product
       </Typography>
-      {loading && <Typography sx={{ color: 'gray' }}>Loading categories...</Typography>}
+      {loading && <Typography sx={{ color: '#757575' }}>Loading categories...</Typography>}
       {error && <Typography color="error">Error loading categories: {error}</Typography>}
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
@@ -218,11 +213,10 @@ const CreateProduct = () => {
             />
           </Grid>
 
-          {/* Colors and Sizes Section */}
           <Grid item xs={12}>
-            <Typography variant="h6" sx={{ color: 'white', mb: 2 }}>Product Colors & Sizes</Typography>
+            <Typography variant="h6" sx={{ color: 'darkgreen', mb: 2 }}>Product Colors & Sizes</Typography>
             {productData.colors.map((color, colorIndex) => (
-              <Box key={colorIndex} sx={{ border: '1px solid #333', borderRadius: '8px', p: 2, mb: 3 }}>
+              <Box key={colorIndex} sx={{ border: '1px solid #E0E0E0', borderRadius: '8px', p: 2, mb: 3, backgroundColor: '#FFFFFF' }}>
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs={12} sm={6}>
                     <StyledTextField
@@ -285,7 +279,7 @@ const CreateProduct = () => {
                 ))}
 
                 <Box sx={{ mt: 2 }}>
-                  <Button variant="outlined" color="primary" onClick={() => handleAddSize(colorIndex)} sx={{ textTransform: 'none', fontWeight: 'bold', borderColor: '#5e35b1', color: '#5e35b1', '&:hover': { backgroundColor: 'rgba(94, 53, 177, 0.1)' } }}>
+                  <Button variant="outlined" color="primary" onClick={() => handleAddSize(colorIndex)} sx={{ textTransform: 'none', fontWeight: 'bold', borderColor: green[600], color: green[600], '&:hover': { backgroundColor: green[100] } }}>
                     Add Size
                   </Button>
                 </Box>
@@ -294,16 +288,15 @@ const CreateProduct = () => {
 
             <Grid item xs={12}>
               <Box sx={{ mt: 3 }}>
-                <Button variant="outlined" color="primary" onClick={handleAddColor} sx={{ textTransform: 'none', fontWeight: 'bold', borderColor: '#f06292', color: '#f06292', '&:hover': { backgroundColor: 'rgba(240, 98, 146, 0.1)' } }}>
+                <Button variant="outlined" color="primary" onClick={handleAddColor} sx={{ textTransform: 'none', fontWeight: 'bold', borderColor: green[600], color: green[600], '&:hover': { backgroundColor: green[100] } }}>
                   Add Color
                 </Button>
               </Box>
             </Grid>
           </Grid>
 
-          {/* Pricing and Category Section */}
           <Grid item xs={12}>
-            <Typography variant="h6" sx={{ color: 'white', mt: 3, mb: 2 }}>Pricing & Category</Typography>
+            <Typography variant="h6" sx={{ color: 'darkgreen', mt: 3, mb: 2 }}>Pricing & Category</Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <StyledTextField
@@ -336,20 +329,11 @@ const CreateProduct = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControl fullWidth sx={{
-                  '& .MuiInputLabel-root': { color: 'gray' },
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': { borderColor: '#333' },
-                    '&:hover fieldset': { borderColor: '#555' },
-                    '&.Mui-focused fieldset': { borderColor: '#f06292' },
-                  },
-                  '& .MuiSelect-icon': { color: 'gray' }
-                }}>
-                  <InputLabel>Category</InputLabel>
+                <FormControl fullWidth>
+                  <InputLabel sx={{ color: '#757575' }}>Category</InputLabel>
                   <StyledSelect name="category" value={productData.category} onChange={handleChange} label="Category">
                     {categories && categories.categories.map((cat) => (
-                      <MenuItem key={cat._id} value={cat._id} sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>
+                      <MenuItem key={cat._id} value={cat._id} sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>
                         {cat.name}
                       </MenuItem>
                     ))}
@@ -359,9 +343,8 @@ const CreateProduct = () => {
             </Grid>
           </Grid>
 
-          {/* Description Section */}
           <Grid item xs={12}>
-            <Typography variant="h6" sx={{ color: 'white', mt: 3, mb: 2 }}>Description</Typography>
+            <Typography variant="h6" sx={{ color: 'darkgreen', mt: 3, mb: 2 }}>Description</Typography>
             <StyledTextField
               fullWidth
               id="outlined-multiline-static"
@@ -378,7 +361,7 @@ const CreateProduct = () => {
             <Button
               type="submit"
               variant="contained"
-              sx={{ p: 1.8, backgroundColor: '#f06292', '&:hover': { backgroundColor: '#c8507a' }, textTransform: 'none', fontWeight: 'bold' }}
+              sx={{ p: 1.8, backgroundColor: green[600], '&:hover': { backgroundColor: green[700] }, textTransform: 'none', fontWeight: 'bold' }}
               fullWidth
               disabled={loading}
             >

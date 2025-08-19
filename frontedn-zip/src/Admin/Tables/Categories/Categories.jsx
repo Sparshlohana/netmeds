@@ -1,296 +1,280 @@
-// Admin/Tables/Categories/Categories.jsx
+// Admin/Tables/Categories/CategoriesTable.jsx
 
-import React, { useState, useEffect } from 'react';
-import { Box, Card, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, FormControl, InputLabel, Select, MenuItem, Pagination, CircularProgress, Alert } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import {
+    Box,
+    Button,
+    Card,
+    CardHeader,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Pagination,
+    Select,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+    CircularProgress,
+    Alert,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { green } from "@mui/material/colors";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
-// Mock data for categories
-const initialMockCategories = [
-  { _id: "cat1", name: "Electronics", description: "Electronic gadgets and devices", level: 1 },
-  { _id: "cat2", name: "Apparel", description: "Clothing and accessories", level: 1 },
-  { _id: "cat3", name: "Home Goods", description: "Items for home decor and utility", level: 2 },
-  { _id: "cat4", name: "Pharmacy", description: "Medicines and health products", level: 1 },
-  { _id: "cat5", name: "Beauty", description: "Beauty and personal care products", level: 2 },
-  { _id: "cat6", name: "Books", description: "Books and literature", level: 3 },
-  { _id: "cat7", name: "Sports", description: "Sports equipment and apparel", level: 1 },
-  { _id: "id_sub_cat_1", name: "Smartphones", description: "Mobile phones and accessories", level: 2, parentCategory: "cat1" },
-  { _id: "id_sub_cat_2", name: "Laptops", description: "Portable computers", level: 2, parentCategory: "cat1" },
-  { _id: "id_sub_cat_3", name: "T-Shirts", description: "Casual wear t-shirts", level: 2, parentCategory: "cat2" },
-];
-
+// Mock data for demonstration purposes, as Redux state is not provided
+const mockCategories = {
+    content: [
+        { _id: "cat1", name: "Electronics", description: "Electronic gadgets and devices", level: 1 },
+        { _id: "cat2", name: "Apparel", description: "Clothing and accessories", level: 1 },
+        { _id: "cat3", name: "Home Goods", description: "Items for home decor and utility", level: 2 },
+        { _id: "cat4", name: "Pharmacy", description: "Medicines and health products", level: 1 },
+        { _id: "cat5", name: "Beauty", description: "Beauty and personal care products", level: 2 },
+        { _id: "cat6", name: "Books", description: "Books and literature", level: 3 },
+    ],
+    totalPages: 3,
+};
 
 const ActionButton = styled(Button)(({ theme }) => ({
-  textTransform: 'none',
-  fontWeight: 'bold',
-  borderRadius: '8px',
-  padding: '10px 20px',
-  color: 'white',
-  backgroundColor: '#5e35b1',
-  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    backgroundColor: '#4527a0',
-    transform: 'translateY(-2px)',
-    boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.4)',
-  },
+    textTransform: 'none',
+    fontWeight: 'bold',
+    borderRadius: '8px',
+    padding: '10px 20px',
+    color: 'white',
+    backgroundColor: green[600],
+    boxShadow: 'none',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+        backgroundColor: green[700],
+        transform: 'translateY(-2px)',
+        boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
+    },
 }));
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
-  '& .MuiInputLabel-root': { color: 'gray' },
-  '& .MuiOutlinedInput-root': {
-    color: 'white',
-    '& fieldset': { borderColor: '#333' },
-    '&:hover fieldset': { borderColor: '#555' },
-    '&.Mui-focused fieldset': { borderColor: '#f06292' },
-  },
-  '& .MuiSelect-icon': { color: 'gray' },
+    '& .MuiInputLabel-root': { color: '#757575' },
+    '& .MuiOutlinedInput-root': {
+        color: 'black',
+        backgroundColor: '#FFFFFF',
+        '& fieldset': { borderColor: '#E0E0E0' },
+        '&:hover fieldset': { borderColor: '#BDBDBD' },
+        '&.Mui-focused fieldset': { borderColor: green[500] },
+    },
+    '& .MuiSelect-icon': { color: '#757575' },
+    width: '100%',
 }));
 
+
 const Categories = () => {
-  const [allCategories, setAllCategories] = useState([]); // All categories for filtering
-  const [filteredCategories, setFilteredCategories] = useState([]); // Categories after filter/sort
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-
-  const [filterValue, setFilterValue] = useState({
-    level: "",
-    sort: "name_asc",
-  });
-  const [page, setPage] = useState(1);
-  const pageSize = 10; // Items per page
-
-  // Simulate fetching categories
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-    setTimeout(() => {
-      setAllCategories(initialMockCategories);
-      setLoading(false);
-    }, 500);
-  }, []);
-
-  // Apply filtering and sorting whenever dependencies change
-  useEffect(() => {
-    let currentCategories = [...allCategories];
-
-    // Filter by level
-    if (filterValue.level !== "") {
-      currentCategories = currentCategories.filter(cat => cat.level === parseInt(filterValue.level));
-    }
-
-    // Sort by name
-    currentCategories.sort((a, b) => {
-      if (filterValue.sort === "name_asc") {
-        return a.name.localeCompare(b.name);
-      } else if (filterValue.sort === "name_desc") {
-        return b.name.localeCompare(a.name);
-      }
-      return 0;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    // Using mock data since Redux state is not available
+    const { categories, loading, error } = { categories: mockCategories, loading: false, error: null };
+    const [filterValue, setFilterValue] = useState({
+        sort: "name_asc",
+        level: "",
     });
 
-    setFilteredCategories(currentCategories);
-    setPage(1); // Reset to first page on filter/sort change
-  }, [allCategories, filterValue]);
+    const [page, setPage] = useState(1);
 
+    useEffect(() => {
+        // Mocking the dispatch call with a simple log
+        console.log("Fetching categories with filters:", {
+            sort: filterValue.sort || "name_asc",
+            level: filterValue.level || "",
+            pageNumber: page,
+            pageSize: 10,
+        });
+        // In a real app, this would be: dispatch(findCategories(data));
+    }, [dispatch, filterValue, page]);
 
-  const handlePaginationChange = (event, value) => {
-    setPage(value);
-  };
+    const handlePaginationChange = (event, value) => {
+        setPage(value);
+    };
 
-  const handleFilterChange = (e, filterName) => {
-    setFilterValue((prev) => ({
-      ...prev,
-      [filterName]: e.target.value,
-    }));
-  };
+    const handleFilterChange = (e, filterName) => {
+        setFilterValue((prev) => ({
+            ...prev,
+            [filterName]: e.target.value,
+        }));
+    };
 
-  const handleDeleteCategory = (categoryId) => {
-    if (window.confirm(`Are you sure you want to delete category with ID: ${categoryId}?`)) {
-      setAllCategories(prev => prev.filter(cat => cat._id !== categoryId)); // Update allCategories
-      alert(`Category ${categoryId} deleted! (Simulated)`);
+    const handleDeleteCategory = (categoryId) => {
+        // Mocking the dispatch call with a simple log
+        console.log("Deleting category:", categoryId);
+        // In a real app, this would be: dispatch(deleteCategory(categoryId));
+    };
+
+    const handleUpdateCategory = (categoryId) => {
+        navigate(`/admin/category/update/${categoryId}`);
+    };
+
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" mt={4} sx={{ color: green[600] }}>
+                <CircularProgress color="inherit" />
+            </Box>
+        );
     }
-  };
 
-  const handleEditCategory = (categoryId) => {
-    console.log("Edit category:", categoryId);
-    // In a real app, you would navigate to an edit form
-    // navigate(`/admin/category/update/${categoryId}`);
-  };
+    if (error) {
+        return (
+            <Box display="flex" justifyContent="center" mt={4}>
+                <Alert severity="error">{error}</Alert>
+            </Box>
+        );
+    }
 
-  const EmptyStateIllustration = () => (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexGrow: 1,
-        textAlign: 'center',
-        py: 4,
-      }}
-    >
-      <img
-        src="/images/emptyCart.png"
-        alt="No data"
-        style={{ width: '100%', maxWidth: '300px', opacity: 0.8 }}
-      />
-      <Typography variant="body1" sx={{ color: 'gray', mt: 2 }}>
-        No Categories Found!
-      </Typography>
-    </Box>
-  );
-
-  // Calculate categories for current page
-  const paginatedCategories = (() => {
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return filteredCategories.slice(startIndex, endIndex);
-  }, [filteredCategories, page, pageSize]);
-
-  const totalPages = Math.ceil(filteredCategories.length / pageSize);
-
-  if (loading) {
     return (
-      <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <CircularProgress sx={{ color: '#f06292' }} />
-      </Box>
-    );
-  }
+        <Box width={"100%"} sx={{ backgroundColor: '#F5F5F5', p: 2 }}>
+            <Card sx={{ backgroundColor: '#FFFFFF', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0', mb: 4 }}>
+                <CardHeader
+                    title={<Typography variant="h6" sx={{ color: 'darkgreen', fontWeight: 'bold' }}>Filter Categories</Typography>}
+                    sx={{
+                        pt: 0,
+                        alignItems: "center",
+                        "& .MuiCardHeader-action": { mt: 0.6 },
+                    }}
+                />
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <StyledFormControl>
+                            <InputLabel id="level-select-label">Level</InputLabel>
+                            <Select
+                                labelId="level-select-label"
+                                id="level-select"
+                                value={filterValue.level}
+                                label="Level"
+                                onChange={(e) => handleFilterChange(e, "level")}
+                            >
+                                <MenuItem value="">All Levels</MenuItem>
+                                <MenuItem value={1}>Level 1</MenuItem>
+                                <MenuItem value={2}>Level 2</MenuItem>
+                                <MenuItem value={3}>Level 3</MenuItem>
+                            </Select>
+                        </StyledFormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <StyledFormControl>
+                            <InputLabel id="sort-select-label">Sort By Name</InputLabel>
+                            <Select
+                                labelId="sort-select-label"
+                                id="sort-select"
+                                value={filterValue.sort}
+                                label="Sort By Name"
+                                onChange={(e) => handleFilterChange(e, "sort")}
+                            >
+                                <MenuItem value={"name_asc"}>A - Z</MenuItem>
+                                <MenuItem value={"name_desc"}>Z - A</MenuItem>
+                            </Select>
+                        </StyledFormControl>
+                    </Grid>
+                </Grid>
+            </Card>
 
-  if (error) {
-    return (
-      <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Alert severity="error" sx={{ backgroundColor: '#f4433622', color: '#f44336' }}>{error}</Alert>
-      </Box>
-    );
-  }
-
-  return (
-    <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold' }}>
-          Category Listing
-        </Typography>
-        <ActionButton startIcon={<AddCircleOutlineIcon />} onClick={() => navigate('/admin/category/create')}>
-          Add New Category
-        </ActionButton>
-      </Box>
-      <Typography variant="body2" sx={{ color: 'gray', mb: 3 }}>
-        Manage your product categories
-      </Typography>
-
-      <Card sx={{ backgroundColor: '#1b1b36', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f', mb: 4 }}>
-        <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold', mb: 2 }}>Filter Categories</Typography>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-          <StyledFormControl sx={{ minWidth: 120, flexGrow: 1 }}>
-            <InputLabel id="level-select-label">Level</InputLabel>
-            <Select
-              labelId="level-select-label"
-              id="level-select"
-              value={filterValue.level}
-              label="Level"
-              onChange={(e) => handleFilterChange(e, "level")}
-            >
-              <MenuItem value="" sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>All Levels</MenuItem>
-              <MenuItem value={1} sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Level 1</MenuItem>
-              <MenuItem value={2} sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Level 2</MenuItem>
-              <MenuItem value={3} sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Level 3</MenuItem>
-            </Select>
-          </StyledFormControl>
-          <StyledFormControl sx={{ minWidth: 120, flexGrow: 1 }}>
-            <InputLabel id="sort-select-label">Sort By Name</InputLabel>
-            <Select
-              labelId="sort-select-label"
-              id="sort-select"
-              value={filterValue.sort}
-              label="Sort By Name"
-              onChange={(e) => handleFilterChange(e, "sort")}
-            >
-              <MenuItem value={"name_asc"} sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>A - Z</MenuItem>
-              <MenuItem value={"name_desc"} sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Z - A</MenuItem>
-            </Select>
-          </StyledFormControl>
+            <Card className="mt-2" sx={{ backgroundColor: '#FFFFFF', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0' }}>
+                <CardHeader
+                    title={<Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', color: 'darkgreen' }}>All Categories</Typography>}
+                    action={
+                        <ActionButton
+                            variant="contained"
+                            onClick={() => navigate("/admin/category/create")}
+                            startIcon={<AddCircleOutlineIcon />}
+                        >
+                            Add Category
+                        </ActionButton>
+                    }
+                />
+                <TableContainer>
+                    <Table sx={{ minWidth: 800, tableLayout: 'fixed' }} aria-label="categories table">
+                        <TableHead>
+                            <TableRow sx={{ borderBottom: '1px solid #E0E0E0' }}>
+                                <TableCell sx={{ color: 'darkgreen', fontWeight: 'bold', width: '15%' }}>ID</TableCell>
+                                <TableCell sx={{ color: 'darkgreen', fontWeight: 'bold', width: '20%' }}>Name</TableCell>
+                                <TableCell sx={{ color: 'darkgreen', fontWeight: 'bold', width: '30%' }}>Description</TableCell>
+                                <TableCell sx={{ color: 'darkgreen', fontWeight: 'bold', width: '10%' }}>Level</TableCell>
+                                <TableCell sx={{ textAlign: "center", color: 'darkgreen', fontWeight: 'bold', width: '25%' }}>Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {categories?.content?.length > 0 ? (
+                                categories.content.map((category) => (
+                                    <TableRow
+                                        hover
+                                        key={category?._id}
+                                        sx={{ "&:last-of-type td, &:last-of-type th": { border: 0 }, borderBottom: '1px solid #E0E0E0' }}
+                                    >
+                                        <TableCell sx={{ color: 'black' }}>{category._id}</TableCell>
+                                        <TableCell sx={{ color: 'black' }}>{category.name}</TableCell>
+                                        <TableCell sx={{ color: 'black' }}>{category.description}</TableCell>
+                                        <TableCell sx={{ color: 'black' }}>{category.level}</TableCell>
+                                        <TableCell sx={{ textAlign: "center", display: 'flex', gap: 1, justifyContent: 'center' }}>
+                                            <Button
+                                                variant="text"
+                                                onClick={() => handleUpdateCategory(category?._id)}
+                                                startIcon={<EditIcon />}
+                                                sx={{ color: green[600], '&:hover': { backgroundColor: 'rgba(0, 128, 0, 0.1)' } }}
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                variant="text"
+                                                onClick={() => handleDeleteCategory(category?._id)}
+                                                startIcon={<DeleteIcon />}
+                                                sx={{ color: '#f06292', '&:hover': { backgroundColor: 'rgba(240, 98, 146, 0.1)' } }}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={5} align="center">
+                                        <Typography variant="body1" sx={{ color: '#616161', mt: 2 }}>
+                                            No categories found.
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Card>
+            {categories?.totalPages > 1 && (
+                <Card sx={{ mt: 2, p: 2, backgroundColor: '#FFFFFF', borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+                        <Pagination
+                            count={categories.totalPages}
+                            color="primary"
+                            page={page}
+                            onChange={handlePaginationChange}
+                            sx={{
+                                '& .MuiPaginationItem-root': {
+                                    color: 'black',
+                                },
+                                '& .MuiPaginationItem-root.Mui-selected': {
+                                    backgroundColor: green[600],
+                                    color: 'white',
+                                    '&:hover': {
+                                        backgroundColor: green[700],
+                                    },
+                                },
+                            }}
+                        />
+                    </Box>
+                </Card>
+            )}
         </Box>
-      </Card>
-
-      <Card sx={{ backgroundColor: '#1b1b36', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f' }}>
-        {paginatedCategories.length > 0 ? (
-          <TableContainer sx={{ mt: 2 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="categories table">
-              <TableHead>
-                <TableRow sx={{ borderBottom: '1px solid #333' }}>
-                  <TableCell sx={{ color: 'gray', fontWeight: 'bold' }}>ID</TableCell>
-                  <TableCell sx={{ color: 'gray', fontWeight: 'bold' }}>Name</TableCell>
-                  <TableCell sx={{ color: 'gray', fontWeight: 'bold' }}>Description</TableCell>
-                  <TableCell sx={{ textAlign: "center", color: 'gray', fontWeight: 'bold' }}>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {paginatedCategories.map((category) => (
-                  <TableRow
-                    hover
-                    key={category._id}
-                    sx={{ "&:last-of-type td, &:last-of-type th": { border: 0 }, borderBottom: '1px solid #2e2e4f' }}
-                  >
-                    <TableCell sx={{ color: 'white' }}>{category._id}</TableCell>
-                    <TableCell sx={{ color: 'white' }}>{category.name}</TableCell>
-                    <TableCell sx={{ color: 'white' }}>{category.description}</TableCell>
-                    <TableCell sx={{ textAlign: "center" }}>
-                      <Button 
-                        variant="text" 
-                        onClick={() => handleEditCategory(category._id)} 
-                        sx={{ color: '#5e35b1', '&:hover': { backgroundColor: 'rgba(94, 53, 177, 0.1)' }, mr: 1 }}
-                        startIcon={<EditIcon />}
-                      >
-                        Edit
-                      </Button>
-                      <Button 
-                        variant="text" 
-                        onClick={() => handleDeleteCategory(category._id)} 
-                        sx={{ color: '#f06292', '&:hover': { backgroundColor: 'rgba(240, 98, 146, 0.1)' } }}
-                        startIcon={<DeleteIcon />}
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ) : (
-          <EmptyStateIllustration />
-        )}
-      </Card>
-      <Card sx={{ mt: 2, p: 2, backgroundColor: '#1b1b36', borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
-          <Pagination
-            count={totalPages}
-            page={page}
-            color="primary"
-            onChange={handlePaginationChange}
-            sx={{
-              '& .MuiPaginationItem-root': {
-                color: 'white',
-              },
-              '& .MuiPaginationItem-root.Mui-selected': {
-                backgroundColor: '#f06292',
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: '#c8507a',
-                },
-              },
-            }}
-          />
-        </Box>
-      </Card>
-    </Box>
-  );
+    );
 };
 
 export default Categories;

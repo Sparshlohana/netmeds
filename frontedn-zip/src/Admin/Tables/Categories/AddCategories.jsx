@@ -4,52 +4,53 @@ import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Grid, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { green } from '@mui/material/colors';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
-  '& .MuiInputBase-root': {
-    color: 'white',
-    backgroundColor: '#1b1b36',
-    borderRadius: '8px',
-    border: '1px solid #333',
-    '& fieldset': {
-      borderColor: 'transparent',
-    },
-    '&:hover fieldset': {
-      borderColor: 'transparent',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#f06292',
-    },
-  },
-  '& .MuiInputBase-input': {
-    padding: '10px 14px',
-    color: 'white',
-  },
-  '& .MuiInputLabel-root': {
-    color: 'gray',
-  },
+ '& .MuiInputBase-root': {
+   color: 'black',
+   backgroundColor: '#FFFFFF',
+   borderRadius: '8px',
+   border: '1px solid #E0E0E0',
+   '& fieldset': {
+     borderColor: 'transparent',
+   },
+   '&:hover fieldset': {
+     borderColor: '#BDBDBD',
+   },
+   '&.Mui-focused fieldset': {
+     borderColor: green[500],
+   },
+ },
+ '& .MuiInputBase-input': {
+   padding: '10px 14px',
+   color: 'black',
+ },
+ '& .MuiInputLabel-root': {
+   color: '#757575',
+ },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
-  color: 'white',
-  backgroundColor: '#1b1b36',
+  color: 'black',
+  backgroundColor: '#FFFFFF',
   borderRadius: '8px',
-  border: '1px solid #333',
+  border: '1px solid #E0E0E0',
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: 'transparent',
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'transparent',
+    borderColor: '#BDBDBD',
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#f06292',
+    borderColor: green[500],
   },
   '& .MuiSelect-select': {
     padding: '10px 14px',
-    color: 'white',
+    color: 'black',
   },
   '& .MuiSvgIcon-root': {
-    color: 'gray',
+    color: '#757575',
   },
 }));
 
@@ -84,8 +85,8 @@ const AddCategories = () => {
   };
 
   return (
-    <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white' }}>
-      <Typography variant="h5" component="h1" sx={{ textAlign: "center", mb: 4, fontWeight: 'bold' }}>
+    <Box sx={{ p: 3, backgroundColor: '#F5F5F5', minHeight: 'calc(100vh - 64px)', color: 'black' }}>
+      <Typography variant="h5" component="h1" sx={{ textAlign: "center", mb: 4, fontWeight: 'bold', color: 'darkgreen' }}>
         Add New Category
       </Typography>
       <form onSubmit={handleSubmit}>
@@ -112,8 +113,8 @@ const AddCategories = () => {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            {/* <StyledFormControl fullWidth> */}
-              <InputLabel>Level</InputLabel>
+            <FormControl fullWidth>
+              <InputLabel sx={{ color: '#757575' }}>Level</InputLabel>
               <StyledSelect
                 name="level"
                 value={categoryData.level}
@@ -121,17 +122,17 @@ const AddCategories = () => {
                 label="Level"
                 required
               >
-                <MenuItem value={1} sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Level 1</MenuItem>
-                <MenuItem value={2} sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Level 2</MenuItem>
-                <MenuItem value={3} sx={{ backgroundColor: '#1b1b36', color: 'white', '&:hover': { backgroundColor: '#2e2e4f' } }}>Level 3</MenuItem>
+                <MenuItem value={1} sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>Level 1</MenuItem>
+                <MenuItem value={2} sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>Level 2</MenuItem>
+                <MenuItem value={3} sx={{ backgroundColor: '#FFFFFF', color: 'black', '&:hover': { backgroundColor: '#F0F0F0' } }}>Level 3</MenuItem>
               </StyledSelect>
-            {/* </StyledFormControl> */}
+            </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
             <Button
               type="submit"
               variant="contained"
-              sx={{ p: 1.8, backgroundColor: '#f06292', '&:hover': { backgroundColor: '#c8507a' }, textTransform: 'none', fontWeight: 'bold' }}
+              sx={{ p: 1.8, backgroundColor: green[600], '&:hover': { backgroundColor: green[700] }, textTransform: 'none', fontWeight: 'bold' }}
               fullWidth
               disabled={loading}
             >

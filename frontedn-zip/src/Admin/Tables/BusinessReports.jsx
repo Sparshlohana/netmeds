@@ -6,11 +6,11 @@ import { styled } from '@mui/material/styles';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import SearchIcon from '@mui/icons-material/Search';
+import { green } from '@mui/material/colors';
 
-// Mock data for the reports list
+
 const reportData = [
-  { 
+  {
     name: 'Sales Register',
     viewBy: 'View by Invoice-wise and Date-wise',
     description: 'Simplify your sales tracking and analysis, includes get and non-get invoices with profit and...',
@@ -66,14 +66,14 @@ const TabPanel = (props) => {
 };
 
 const StyledCard = styled(Card)({
-  backgroundColor: '#1b1b36',
+  backgroundColor: '#FFFFFF',
   borderRadius: '8px',
   boxShadow: 'none',
-  border: '1px solid #2e2e4f',
+  border: '1px solid #E0E0E0',
 });
 
 const ReportListItem = styled(ListItem)({
-  borderBottom: '1px solid #2e2e4f',
+  borderBottom: '1px solid #E0E0E0',
   '&:last-child': {
     borderBottom: 'none',
   },
@@ -87,14 +87,14 @@ const BusinessReports = () => {
   };
 
   return (
-    <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white' }}>
+    <Box sx={{ p: 3, backgroundColor: '#F5F5F5', minHeight: 'calc(100vh - 64px)', color: 'black' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold' }}>Business Reports</Typography>
-        <Button sx={{ color: '#f06292', textTransform: 'none', '&:hover': { backgroundColor: 'rgba(240, 98, 146, 0.1)' } }}>
+        <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', color: 'darkgreen' }}>Business Reports</Typography>
+        <Button sx={{ color: green[600], textTransform: 'none', '&:hover': { backgroundColor: green[100] } }}>
           <InfoOutlinedIcon sx={{ mr: 0.5 }} /> How to View Reports?
         </Button>
       </Box>
-      <Typography variant="body2" sx={{ color: 'gray', mb: 3 }}>
+      <Typography variant="body2" sx={{ color: '#444', mb: 3 }}>
         View & Download Reports in CSV, PDF or XLS
       </Typography>
 
@@ -102,12 +102,12 @@ const BusinessReports = () => {
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
-          indicatorColor="secondary"
-          textColor="secondary"
+          indicatorColor="primary"
+          textColor="primary"
           sx={{
-            borderBottom: '1px solid #2e2e4f',
-            '& .MuiTab-root': { color: 'gray', fontWeight: 'bold' },
-            '& .Mui-selected': { color: 'white !important' },
+            borderBottom: '1px solid #E0E0E0',
+            '& .MuiTab-root': { color: '#616161', fontWeight: 'bold' },
+            '& .Mui-selected': { color: green[600] + ' !important' },
           }}
         >
           <Tab label="SALES REPORTS" />
@@ -119,71 +119,68 @@ const BusinessReports = () => {
           <Tab label="ORDER REPORTS" />
         </Tabs>
 
-        {/* Tab content */}
         <TabPanel value={activeTab} index={0}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="body1" sx={{ color: 'gray' }}>
+            <Typography variant="body1" sx={{ color: 'darkgreen', fontWeight: 'bold' }}>
               REPORT NAME / VIEW BY
             </Typography>
-            <Typography variant="body1" sx={{ color: 'gray' }}>
+            <Typography variant="body1" sx={{ color: 'darkgreen', fontWeight: 'bold' }}>
               REPORT DESCRIPTION
             </Typography>
           </Box>
           <List>
             {reportData.map((report, index) => (
               <ReportListItem key={index} sx={{ py: 2 }}>
-                <IconButton sx={{ color: 'gray', mr: 2 }}>
+                <IconButton sx={{ color: '#444', mr: 2, '&:hover': { backgroundColor: green[50] } }}>
                   <StarBorderIcon />
                 </IconButton>
                 <ListItemText
                   primary={
-                    <Typography variant="body1" sx={{ color: 'white', fontWeight: 'bold' }}>{report.name}</Typography>
+                    <Typography variant="body1" sx={{ color: 'black', fontWeight: 'bold' }}>{report.name}</Typography>
                   }
                   secondary={
-                    <Typography variant="body2" sx={{ color: 'gray' }}>{report.viewBy}</Typography>
+                    <Typography variant="body2" sx={{ color: '#616161' }}>{report.viewBy}</Typography>
                   }
                 />
                 <ListItemText
                   sx={{ textAlign: 'right' }}
                   primary={
-                    <Typography variant="body2" sx={{ color: 'gray', fontStyle: 'italic' }}>
+                    <Typography variant="body2" sx={{ color: '#616161', fontStyle: 'italic' }}>
                       {report.description}
                     </Typography>
                   }
                 />
-                <IconButton edge="end" sx={{ color: 'gray', ml: 2 }}>
+                <IconButton edge="end" sx={{ color: '#444', ml: 2, '&:hover': { backgroundColor: green[50] } }}>
                   <ArrowForwardIosIcon fontSize="small" />
                 </IconButton>
               </ReportListItem>
             ))}
           </List>
         </TabPanel>
-        
-        {/* Placeholder for other tabs */}
+
         <TabPanel value={activeTab} index={1}>
-          <Typography sx={{ color: 'gray' }}>Stock Reports content will go here...</Typography>
+          <Typography sx={{ color: '#616161' }}>Stock Reports content will go here...</Typography>
         </TabPanel>
         <TabPanel value={activeTab} index={2}>
-          <Typography sx={{ color: 'gray' }}>Purchase Reports content will go here...</Typography>
+          <Typography sx={{ color: '#616161' }}>Purchase Reports content will go here...</Typography>
         </TabPanel>
         <TabPanel value={activeTab} index={3}>
-          <Typography sx={{ color: 'gray' }}>Payments Reports content will go here...</Typography>
+          <Typography sx={{ color: '#616161' }}>Payments Reports content will go here...</Typography>
         </TabPanel>
         <TabPanel value={activeTab} index={4}>
-          <Typography sx={{ color: 'gray' }}>GST Reports content will go here...</Typography>
+          <Typography sx={{ color: '#616161' }}>GST Reports content will go here...</Typography>
         </TabPanel>
         <TabPanel value={activeTab} index={5}>
-          <Typography sx={{ color: 'gray' }}>Party Reports content will go here...</Typography>
+          <Typography sx={{ color: '#616161' }}>Party Reports content will go here...</Typography>
         </TabPanel>
         <TabPanel value={activeTab} index={6}>
-          <Typography sx={{ color: 'gray' }}>Order Reports content will go here...</Typography>
+          <Typography sx={{ color: '#616161' }}>Order Reports content will go here...</Typography>
         </TabPanel>
 
       </StyledCard>
 
-      {/* Keyboard Shortcuts Hint */}
       <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography variant="caption" sx={{ display: 'block', color: 'gray' }}>
+        <Typography variant="caption" sx={{ display: 'block', color: '#616161' }}>
           Move Up or Down - Arrow Keys | To Open a Report - Enter | Go Front (Ctrl+Right) - Go Back (Ctrl+Left)
         </Typography>
       </Box>

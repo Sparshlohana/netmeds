@@ -7,9 +7,9 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddIcon from '@mui/icons-material/Add';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import NewCustomerOrderModal from '../componets/Orders/NewCustomerOrderModal'; // Corrected path
+import NewCustomerOrderModal from '../componets/Orders/NewCustomerOrderModal';
+import { green } from '@mui/material/colors';
 
-// Mock data with new customer names
 const mockOrders = [
   { patientName: 'Arjun Verma', orderNo: 'ORD001', source: 'Online', fulfillment: 'Pending', created: '2025-07-15', age: 35, ordStatus: 'New', updated: '2025-07-15', skus: 5, forBilling: 'Yes', amount: 1500 },
   { patientName: 'Priya Sharma', orderNo: 'ORD002', source: 'Offline', fulfillment: 'Shipped', created: '2025-07-14', age: 42, ordStatus: 'Processing', updated: '2025-07-16', skus: 8, forBilling: 'No', amount: 2500 },
@@ -24,13 +24,13 @@ const ActionButton = styled(Button)(({ theme }) => ({
   borderRadius: '8px',
   padding: '10px 20px',
   color: 'white',
-  backgroundColor: '#5e35b1',
-  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+  backgroundColor: green[600],
+  boxShadow: 'none',
   transition: 'all 0.3s ease',
   '&:hover': {
-    backgroundColor: '#4527a0',
+    backgroundColor: green[700],
     transform: 'translateY(-2px)',
-    boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.4)',
+    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
   },
 }));
 
@@ -43,44 +43,44 @@ const PromoteButton = styled(ActionButton)({
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
-    color: 'white',
-    backgroundColor: '#1b1b36',
+    color: 'black',
+    backgroundColor: '#FFFFFF',
     borderRadius: '8px',
-    border: '1px solid #333',
+    border: '1px solid #E0E0E0',
     paddingLeft: theme.spacing(1),
     '& fieldset': {
       borderColor: 'transparent',
     },
     '&:hover fieldset': {
-      borderColor: 'transparent',
+      borderColor: '#BDBDBD',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#f06292',
+      borderColor: green[500],
     },
   },
   '& .MuiInputBase-input': {
     padding: '10px 14px',
-    color: 'white',
+    color: 'black',
   },
   '& .MuiInputAdornment-root': {
-    color: 'gray',
+    color: '#757575',
   },
 }));
 
 const StyledDateInputContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: '#1b1b36',
+  backgroundColor: '#FFFFFF',
   borderRadius: '8px',
-  border: '1px solid #333',
+  border: '1px solid #E0E0E0',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: '0 10px',
   gap: '4px',
   '&:hover': {
-    borderColor: '#555',
+    borderColor: '#BDBDBD',
   },
   '&:focus-within': {
-    borderColor: '#f06292',
+    borderColor: green[500],
   },
 }));
 
@@ -93,7 +93,7 @@ const StyledDateTextField = styled(TextField)(({ theme }) => ({
   },
   '& input[type="date"]': {
     padding: '10px 0',
-    color: 'white',
+    color: 'black',
     width: '100px',
   },
   '& input[type="date"]::-webkit-calendar-picker-indicator': {
@@ -107,7 +107,7 @@ const CustomerOrders = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('2025-07-12');
   const [endDate, setEndDate] = useState('2025-08-12');
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -146,7 +146,7 @@ const CustomerOrders = () => {
       setLoading(false);
     }, 500);
   };
-  
+
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
@@ -163,27 +163,27 @@ const CustomerOrders = () => {
       }}
     >
       <img
-        src="/images/emptyCart.png" 
+        src="/images/emptyCart.png"
         alt="Empty data illustration"
         style={{ width: '100%', maxWidth: '300px', opacity: 0.8 }}
       />
-      <Typography variant="body1" sx={{ color: 'gray', mt: 2 }}>
+      <Typography variant="body1" sx={{ color: '#616161', mt: 2 }}>
         No data
       </Typography>
     </Box>
   );
 
   return (
-    <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white' }}>
+    <Box sx={{ p: 3, backgroundColor: '#F5F5F5', minHeight: 'calc(100vh - 64px)', color: 'black' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography variant="h5" component="h1" sx={{ mr: 1, fontWeight: 'bold' }}>Customer Orders</Typography>
-              <Button onClick={handleRefresh} sx={{ textTransform: 'none', color: '#f06292', '&:hover': { backgroundColor: 'rgba(240, 98, 146, 0.1)' } }}>
-                  <RefreshIcon sx={{ mr: 0.5 }} /> Refresh
-              </Button>
+            <Typography variant="h5" component="h1" sx={{ mr: 1, fontWeight: 'bold', color: 'darkgreen' }}>Customer Orders</Typography>
+            <Button onClick={handleRefresh} sx={{ textTransform: 'none', color: green[600], '&:hover': { backgroundColor: green[100] } }}>
+              <RefreshIcon sx={{ mr: 0.5 }} /> Refresh
+            </Button>
           </Box>
-          <Typography variant="body2" sx={{ color: 'gray' }}>
+          <Typography variant="body2" sx={{ color: '#444' }}>
             List of Online & Offline Customer Orders
           </Typography>
         </Box>
@@ -196,9 +196,9 @@ const CustomerOrders = () => {
               Promote MedCart
             </PromoteButton>
           </Box>
-          <Button 
-            variant="text" 
-            sx={{ color: '#f06292', textTransform: 'none', fontSize: '0.8rem', '&:hover': { backgroundColor: 'rgba(240, 98, 146, 0.1)' } }}
+          <Button
+            variant="text"
+            sx={{ color: green[600], textTransform: 'none', fontSize: '0.8rem', '&:hover': { backgroundColor: green[100] } }}
             onClick={() => console.log('Add short items')}
           >
             + ADD SHORT ITEMS TO CART IN BULK
@@ -206,7 +206,6 @@ const CustomerOrders = () => {
         </Box>
       </Box>
 
-      {/* Search and Date Filter */}
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap', mb: 3 }}>
         <StyledTextField
           placeholder="Search by Patient or Order No"
@@ -222,7 +221,7 @@ const CustomerOrders = () => {
             ),
           }}
         />
-        <Typography variant="body2" sx={{ color: 'white', whiteSpace: 'nowrap', fontWeight: 'bold' }}>
+        <Typography variant="body2" sx={{ color: 'black', whiteSpace: 'nowrap', fontWeight: 'bold' }}>
           CREATED BETWEEN
         </Typography>
         <StyledDateInputContainer>
@@ -232,27 +231,27 @@ const CustomerOrders = () => {
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
-          <Typography sx={{ color: 'white' }}>-</Typography>
+          <Typography sx={{ color: 'black' }}>-</Typography>
           <StyledDateTextField
             type="date"
             variant="standard"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
           />
-          <CalendarTodayIcon sx={{ color: 'gray' }} />
+          <CalendarTodayIcon sx={{ color: '#757575' }} />
         </StyledDateInputContainer>
       </Box>
 
-      <Card sx={{ backgroundColor: '#1b1b36', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f' }}>
+      <Card sx={{ backgroundColor: '#FFFFFF', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0' }}>
         {loading ? (
           <Box sx={{ textAlign: 'center', py: 5 }}>
-            <Typography variant="body1" sx={{ color: 'gray' }}>Loading orders...</Typography>
+            <Typography variant="body1" sx={{ color: '#616161' }}>Loading orders...</Typography>
           </Box>
         ) : filteredOrders.length > 0 ? (
           <Box sx={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid #333' }}>
+                <tr style={{ borderBottom: '1px solid #E0E0E0' }}>
                   <th style={tableHeaderStyle}>PATIENT NAME</th>
                   <th style={tableHeaderStyle}>ORDER NO</th>
                   <th style={tableHeaderStyle}>SOURCE</th>
@@ -268,7 +267,7 @@ const CustomerOrders = () => {
               </thead>
               <tbody>
                 {filteredOrders.map((order, index) => (
-                  <tr key={index} style={{ borderBottom: '1px solid #2e2e4f' }}>
+                  <tr key={index} style={{ borderBottom: '1px solid #E0E0E0' }}>
                     <td style={tableCellStyle}>{order.patientName}</td>
                     <td style={tableCellStyle}>{order.orderNo}</td>
                     <td style={tableCellStyle}>{order.source}</td>
@@ -289,8 +288,7 @@ const CustomerOrders = () => {
           <EmptyStateIllustration />
         )}
       </Card>
-      
-      {/* New Customer Order Modal */}
+
       <NewCustomerOrderModal open={isModalOpen} handleClose={handleCloseModal} />
     </Box>
   );
@@ -302,18 +300,19 @@ const tableHeaderStyle = {
   padding: '12px 16px',
   textAlign: 'left',
   fontSize: '0.75rem',
-  fontWeight: '600',
-  color: 'gray',
+  fontWeight: 'bold',
+  color: 'darkgreen',
   textTransform: 'uppercase',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+  backgroundColor: '#FFFFFF',
 };
 
 const tableCellStyle = {
   padding: '12px 16px',
   fontSize: '0.875rem',
-  color: 'white',
+  color: 'black',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',

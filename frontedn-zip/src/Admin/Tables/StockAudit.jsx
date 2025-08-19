@@ -7,6 +7,8 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { green } from '@mui/material/colors';
+
 
 // Mock data for stock audit entries
 const mockAudits = [
@@ -23,79 +25,79 @@ const ActionButton = styled(Button)(({ theme }) => ({
   borderRadius: '8px',
   padding: '10px 20px',
   color: 'white',
-  backgroundColor: '#5e35b1',
-  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+  backgroundColor: green[600],
+  boxShadow: 'none',
   transition: 'all 0.3s ease',
   '&:hover': {
-    backgroundColor: '#4527a0',
+    backgroundColor: green[700],
     transform: 'translateY(-2px)',
-    boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.4)',
+    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
   },
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
-    color: 'white',
-    backgroundColor: '#1b1b36',
+    color: 'black',
+    backgroundColor: '#FFFFFF',
     borderRadius: '8px',
-    border: '1px solid #333',
+    border: '1px solid #E0E0E0',
     paddingLeft: theme.spacing(1),
     '& fieldset': {
       borderColor: 'transparent',
     },
     '&:hover fieldset': {
-      borderColor: 'transparent',
+      borderColor: '#BDBDBD',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#f06292',
+      borderColor: green[500],
     },
   },
   '& .MuiInputBase-input': {
     padding: '10px 14px',
-    color: 'white',
+    color: 'black',
   },
   '& .MuiInputAdornment-root': {
-    color: 'gray',
+    color: '#757575',
   },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
-  color: 'white',
-  backgroundColor: '#1b1b36',
+  color: 'black',
+  backgroundColor: '#FFFFFF',
   borderRadius: '8px',
-  border: '1px solid #333',
+  border: '1px solid #E0E0E0',
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: 'transparent',
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'transparent',
+    borderColor: '#BDBDBD',
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#f06292',
+    borderColor: green[500],
   },
   '& .MuiSelect-select': {
     padding: '10px 14px',
-    color: 'white',
+    color: 'black',
   },
   '& .MuiSvgIcon-root': {
-    color: 'gray',
+    color: '#757575',
   },
 }));
 
 const StyledDateInputContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: '#1b1b36',
+  backgroundColor: '#FFFFFF',
   borderRadius: '8px',
-  border: '1px solid #333',
+  border: '1px solid #E0E0E0',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: '0 10px',
   gap: '4px',
   '&:hover': {
-    borderColor: '#555',
+    borderColor: '#BDBDBD',
   },
   '&:focus-within': {
-    borderColor: '#f06292',
+    borderColor: green[500],
   },
 }));
 
@@ -108,7 +110,7 @@ const StyledDateTextField = styled(TextField)(({ theme }) => ({
   },
   '& input[type="date"]': {
     padding: '10px 0',
-    color: 'white',
+    color: 'black',
     width: '100px',
   },
   '& input[type="date"]::-webkit-calendar-picker-indicator': {
@@ -136,17 +138,14 @@ const StockAudit = () => {
 
   const filteredAndSortedAudits = useMemo(() => {
     let result = [...audits];
-
     if (searchTerm) {
       result = result.filter(audit =>
         audit.id.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-
     if (filterBy) {
       result = result.filter(audit => audit.status.toLowerCase() === filterBy.toLowerCase());
     }
-
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -157,17 +156,14 @@ const StockAudit = () => {
         return auditStartDate >= start && auditEndDate <= end;
       });
     }
-
     if (sortBy) {
       result.sort((a, b) => {
         let valA = a[sortBy];
         let valB = b[sortBy];
-
         if (typeof valA === 'string') {
           valA = valA.toLowerCase();
           valB = valB.toLowerCase();
         }
-
         if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
         if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
         return 0;
@@ -203,20 +199,20 @@ const StockAudit = () => {
         alt="No data"
         style={{ width: '100%', maxWidth: '300px', opacity: 0.8 }}
       />
-      <Typography variant="body1" sx={{ color: 'gray', mt: 2 }}>
+      <Typography variant="body1" sx={{ color: '#616161', mt: 2 }}>
         We've Plenty Of Space For Your Data, We Promise!
       </Typography>
     </Box>
   );
 
   return (
-    <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white' }}>
+    <Box sx={{ p: 3, backgroundColor: '#F5F5F5', minHeight: 'calc(100vh - 64px)', color: 'black' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', color: 'darkgreen' }}>
           Physical Stock Audit
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button sx={{ color: '#f06292', textTransform: 'none', '&:hover': { backgroundColor: 'rgba(240, 98, 146, 0.1)' } }}>
+          <Button sx={{ color: green[600], textTransform: 'none', '&:hover': { backgroundColor: green[100] } }}>
             <InfoOutlinedIcon sx={{ mr: 0.5 }} /> How Audit Works?
           </Button>
           <ActionButton startIcon={<AddCircleOutlineIcon />} onClick={() => console.log('New Audit')}>
@@ -224,12 +220,12 @@ const StockAudit = () => {
           </ActionButton>
         </Box>
       </Box>
-      <Typography variant="body2" sx={{ color: 'gray', mb: 3 }}>
+      <Typography variant="body2" sx={{ color: '#444', mb: 3 }}>
         Verify Physical Stock against Software Stock
       </Typography>
 
-      <Card sx={{ backgroundColor: '#1b1b36', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f' }}>
-        <Typography variant="body2" sx={{ color: '#f06292', fontWeight: 'bold', mb: 2 }}>
+      <Card sx={{ backgroundColor: '#FFFFFF', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0' }}>
+        <Typography variant="body2" sx={{ color: 'darkgreen', fontWeight: 'bold', mb: 2 }}>
           Search | Filter | Sort
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap', mb: 3 }}>
@@ -254,14 +250,14 @@ const StockAudit = () => {
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
-            <Typography sx={{ color: 'white' }}>-</Typography>
+            <Typography sx={{ color: 'black' }}>-</Typography>
             <StyledDateTextField
               type="date"
               variant="standard"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
-            <CalendarTodayIcon sx={{ color: 'gray' }} />
+            <CalendarTodayIcon sx={{ color: '#757575' }} />
           </StyledDateInputContainer>
           <StyledSelect
             value={filterBy}
@@ -289,28 +285,27 @@ const StockAudit = () => {
           </StyledSelect>
         </Box>
 
-        {/* Audit Table */}
         {loading ? (
           <Box sx={{ textAlign: 'center', py: 5 }}>
-            <Typography variant="body1" sx={{ color: 'gray' }}>Loading audits...</Typography>
+            <Typography variant="body1" sx={{ color: '#616161' }}>Loading audits...</Typography>
           </Box>
         ) : filteredAndSortedAudits.length > 0 ? (
           <Box sx={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid #333' }}>
-                  <th style={tableHeaderStyle('id', sortBy, sortOrder)} onClick={() => handleSort('id')}>AUDIT NUMBER</th>
-                  <th style={tableHeaderStyle('status', sortBy, sortOrder)} onClick={() => handleSort('status')}>AUDIT STATUS</th>
-                  <th style={tableHeaderStyle('type', sortBy, sortOrder)} onClick={() => handleSort('type')}>AUDIT TYPE</th>
-                  <th style={tableHeaderStyle('auditEndStart', sortBy, sortOrder)} onClick={() => handleSort('auditEndStart')}>AUDIT END / START</th>
-                  <th style={tableHeaderStyle('progress', sortBy, sortOrder)} onClick={() => handleSort('progress')}>PROGRESS IN SKUs</th>
-                  <th style={tableHeaderStyle('adjusted', sortBy, sortOrder)} onClick={() => handleSort('adjusted')}>ADJUSTED</th>
-                  <th style={tableHeaderStyle('adjustedBy', sortBy, sortOrder)} onClick={() => handleSort('adjustedBy')}>ADJUSTED BY</th>
+                <tr style={{ borderBottom: '1px solid #E0E0E0' }}>
+                  <th style={tableHeaderStyle('id', sortBy, sortOrder)}>AUDIT NUMBER</th>
+                  <th style={tableHeaderStyle('status', sortBy, sortOrder)}>AUDIT STATUS</th>
+                  <th style={tableHeaderStyle('type', sortBy, sortOrder)}>AUDIT TYPE</th>
+                  <th style={tableHeaderStyle('auditEndStart', sortBy, sortOrder)}>AUDIT END / START</th>
+                  <th style={tableHeaderStyle('progress', sortBy, sortOrder)}>PROGRESS IN SKUs</th>
+                  <th style={tableHeaderStyle('adjusted', sortBy, sortOrder)}>ADJUSTED</th>
+                  <th style={tableHeaderStyle('adjustedBy', sortBy, sortOrder)}>ADJUSTED BY</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredAndSortedAudits.map((audit) => (
-                  <tr key={audit.id} style={{ borderBottom: '1px solid #2e2e4f' }}>
+                  <tr key={audit.id} style={{ borderBottom: '1px solid #E0E0E0' }}>
                     <td style={tableCellStyle}>{audit.id}</td>
                     <td style={tableCellStyle}>{audit.status}</td>
                     <td style={tableCellStyle}>{audit.type}</td>
@@ -328,9 +323,8 @@ const StockAudit = () => {
         )}
       </Card>
 
-      {/* Keyboard Shortcuts Hint */}
       <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography variant="caption" sx={{ display: 'block', color: 'gray' }}>
+        <Typography variant="caption" sx={{ display: 'block', color: '#616161' }}>
           New Audit - F2 | Select a Card - Up or Down Key | Open a Card - Enter
         </Typography>
       </Box>
@@ -340,28 +334,27 @@ const StockAudit = () => {
 
 export default StockAudit;
 
-// Inline styles for table headers and cells
 const tableHeaderStyle = (columnKey, currentSortBy, currentSortOrder) => ({
   padding: '12px 16px',
   textAlign: 'left',
   fontSize: '0.75rem',
   fontWeight: 'bold',
-  color: 'gray',
+  color: 'darkgreen',
   textTransform: 'uppercase',
   cursor: 'pointer',
-  backgroundColor: '#1b1b36',
+  backgroundColor: '#FFFFFF',
   position: 'sticky',
   top: 0,
   zIndex: 1,
   ...(columnKey === currentSortBy && {
-    color: '#f06292',
+    color: '#000000',
   }),
 });
 
 const tableCellStyle = {
   padding: '12px 16px',
   fontSize: '0.875rem',
-  color: 'white',
+  color: 'black',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',

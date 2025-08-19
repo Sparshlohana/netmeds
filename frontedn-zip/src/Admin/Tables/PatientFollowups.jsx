@@ -3,8 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Box, Card, Typography, TextField, Button, InputAdornment, styled, Tabs, Tab } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import SortIcon from '@mui/icons-material/Sort';
+import { green } from '@mui/material/colors';
 
 // Mock data for follow-ups
 const mockFollowups = [
@@ -16,11 +15,12 @@ const mockFollowups = [
 ];
 
 const StyledCard = styled(Card)({
-  backgroundColor: '#1b1b36',
+  backgroundColor: '#FFFFFF',
   borderRadius: '8px',
   boxShadow: 'none',
-  border: '1px solid #2e2e4f',
+  border: '1px solid #E0E0E0',
   height: '100%',
+  color: 'black',
 });
 
 const FollowupItem = styled(Box)({
@@ -28,10 +28,10 @@ const FollowupItem = styled(Box)({
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '12px 16px',
-  borderBottom: '1px solid #2e2e4f',
+  borderBottom: '1px solid #E0E0E0',
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: 'rgba(240, 98, 146, 0.1)',
+    backgroundColor: green[50],
   },
 });
 
@@ -42,10 +42,10 @@ const FollowupList = styled(Box)({
     width: '5px',
   },
   '&::-webkit-scrollbar-track': {
-    backgroundColor: '#1b1b36',
+    backgroundColor: '#F5F5F5',
   },
   '&::-webkit-scrollbar-thumb': {
-    backgroundColor: '#424242',
+    backgroundColor: '#BDBDBD',
     borderRadius: '2px',
   },
 });
@@ -67,7 +67,7 @@ const PatientFollowups = () => {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
-    setSelectedFollowup(null); // Clear selected followup when changing tabs
+    setSelectedFollowup(null);
   };
 
   const filteredFollowups = useMemo(() => {
@@ -75,14 +75,12 @@ const PatientFollowups = () => {
     const statusFilter = ['Arriving', 'Expired'][activeTab];
 
     result = result.filter(f => f.type === statusFilter);
-
     if (searchTerm) {
       result = result.filter(f =>
         f.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         f.contact.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    
     return result;
   }, [followups, activeTab, searchTerm]);
 
@@ -92,7 +90,7 @@ const PatientFollowups = () => {
 
   const EmptyState = () => (
     <Box sx={{ textAlign: 'center', py: 5 }}>
-      <Typography variant="body1" sx={{ color: 'gray' }}>
+      <Typography variant="body1" sx={{ color: '#616161' }}>
         No Followups Found!
       </Typography>
     </Box>
@@ -100,35 +98,34 @@ const PatientFollowups = () => {
 
   const NoEntriesFound = () => (
     <Box sx={{ textAlign: 'center', py: 5, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Typography variant="body1" sx={{ color: 'gray' }}>
+      <Typography variant="body1" sx={{ color: '#616161' }}>
         No Entries Found!
       </Typography>
     </Box>
   );
 
   return (
-    <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white' }}>
-      <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', mb: 1 }}>
+    <Box sx={{ p: 3, backgroundColor: '#F5F5F5', minHeight: 'calc(100vh - 64px)', color: 'black' }}>
+      <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', mb: 1, color: 'darkgreen' }}>
         PATIENT FOLLOW-UPS
       </Typography>
-      <Typography variant="body2" sx={{ color: 'gray', mb: 3 }}>
+      <Typography variant="body2" sx={{ color: '#444', mb: 3 }}>
         Start building relationship with your customers
       </Typography>
 
       <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 3, height: '100%' }}>
-        
-        {/* Left Card: Follow-up List */}
         <StyledCard sx={{ p: 3 }}>
           <Tabs
             value={activeTab}
             onChange={handleTabChange}
-            indicatorColor="secondary"
-            textColor="secondary"
+            indicatorColor="primary"
+            textColor="primary"
             sx={{
               mb: 2,
-              '& .MuiTab-root': { color: 'gray', fontWeight: 'bold' },
-              '& .Mui-selected': { color: '#f06292 !important' },
-              '& .MuiTabs-indicator': { backgroundColor: '#f06292' },
+              borderBottom: '1px solid #E0E0E0',
+              '& .MuiTab-root': { color: '#616161', fontWeight: 'bold' },
+              '& .Mui-selected': { color: green[600] + ' !important' },
+              '& .MuiTabs-indicator': { backgroundColor: green[600] },
             }}
           >
             <Tab label="Arriving" />
@@ -136,7 +133,7 @@ const PatientFollowups = () => {
           </Tabs>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="body2" sx={{ color: '#f06292', fontWeight: 'bold' }}>
+            <Typography variant="body2" sx={{ color: 'darkgreen', fontWeight: 'bold' }}>
               Search | Filter | Sort
             </Typography>
           </Box>
@@ -147,8 +144,7 @@ const PatientFollowups = () => {
               size="small"
               value=""
               label="FILTER BY"
-              sx={{ flexGrow: 1, backgroundColor: '#0d0d1a', '& fieldset': { borderColor: '#333' } }}
-            //   InputProps={{ startAdornment: (<InputAdornment position="start"><FilterListIcon sx={{ color: 'gray' }} /></InputAdornment>) }}
+              sx={{ flexGrow: 1, backgroundColor: '#FFFFFF', '& fieldset': { borderColor: '#E0E0E0' }, '& .MuiInputLabel-root': { color: '#757575' } }}
             />
             <TextField
               select
@@ -156,11 +152,10 @@ const PatientFollowups = () => {
               size="small"
               value=""
               label="SORT BY"
-              sx={{ flexGrow: 1, backgroundColor: '#0d0d1a', '& fieldset': { borderColor: '#333' } }}
-            //   InputProps={{ startAdornment: (<InputAdornment position="start"><SortIcon sx={{ color: 'gray' }} /></InputAdornment>) }}
+              sx={{ flexGrow: 1, backgroundColor: '#FFFFFF', '& fieldset': { borderColor: '#E0E0E0' }, '& .MuiInputLabel-root': { color: '#757575' } }}
             />
           </Box>
-          
+
           <TextField
             placeholder="Search Customer using Name or Contacts"
             variant="outlined"
@@ -171,32 +166,32 @@ const PatientFollowups = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'gray' }} />
+                  <SearchIcon sx={{ color: '#757575' }} />
                 </InputAdornment>
               ),
-              sx: { backgroundColor: '#0d0d1a', border: '1px solid #333', color: 'white', '& input': { color: 'white' } },
+              sx: { backgroundColor: '#FFFFFF', border: '1px solid #E0E0E0', color: 'black', '& input': { color: 'black' } },
             }}
           />
 
           <Box sx={{ mt: 2 }}>
             {loading ? (
               <Box sx={{ textAlign: 'center', py: 5 }}>
-                <Typography variant="body1" sx={{ color: 'gray' }}>Loading...</Typography>
+                <Typography variant="body1" sx={{ color: '#616161' }}>Loading...</Typography>
               </Box>
             ) : filteredFollowups.length > 0 ? (
               <FollowupList>
                 {filteredFollowups.map((followup) => (
-                  <FollowupItem 
-                    key={followup.id} 
+                  <FollowupItem
+                    key={followup.id}
                     onClick={() => handleSelectFollowup(followup)}
-                    sx={{ backgroundColor: selectedFollowup?.id === followup.id ? 'rgba(240, 98, 146, 0.2)' : 'transparent' }}
+                    sx={{ backgroundColor: selectedFollowup?.id === followup.id ? green[50] : 'transparent' }}
                   >
                     <Box>
                       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{followup.name}</Typography>
-                      <Typography variant="body2" sx={{ color: 'gray' }}>First Sale: {followup.firstSale}</Typography>
+                      <Typography variant="body2" sx={{ color: '#616161' }}>First Sale: {followup.firstSale}</Typography>
                     </Box>
                     {followup.overdue && (
-                      <Typography variant="body2" sx={{ color: '#f06292', fontWeight: 'bold' }}>Overdue</Typography>
+                      <Typography variant="body2" sx={{ color: '#f44336', fontWeight: 'bold' }}>Overdue</Typography>
                     )}
                   </FollowupItem>
                 ))}
@@ -207,29 +202,28 @@ const PatientFollowups = () => {
           </Box>
         </StyledCard>
 
-        {/* Right Card: Customer Details */}
         <StyledCard sx={{ display: 'flex', flexDirection: 'column', p: 3, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
           {selectedFollowup ? (
             <Box sx={{ width: '100%' }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Box sx={{ width: 60, height: 60, bgcolor: 'gray', borderRadius: 1, mr: 2 }} />
+                  <Box sx={{ width: 60, height: 60, bgcolor: '#BDBDBD', borderRadius: 1, mr: 2 }} />
                   <Box>
-                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{selectedFollowup.name}</Typography>
-                    <Typography variant="body2" sx={{ color: 'gray' }}>First Sale: {selectedFollowup.firstSale}</Typography>
-                    <Typography variant="body2" sx={{ color: 'gray' }}>Contact: {selectedFollowup.contact}</Typography>
-                    <Typography variant="body2" sx={{ color: 'gray' }}>Address: {selectedFollowup.address}</Typography>
-                    <Button 
-                      onClick={() => console.log('View Sales History')} 
-                      sx={{ color: '#f06292', textTransform: 'none', p: 0, mt: 1, '&:hover': { backgroundColor: 'transparent' } }}
+                    <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'black' }}>{selectedFollowup.name}</Typography>
+                    <Typography variant="body2" sx={{ color: '#616161' }}>First Sale: {selectedFollowup.firstSale}</Typography>
+                    <Typography variant="body2" sx={{ color: '#616161' }}>Contact: {selectedFollowup.contact}</Typography>
+                    <Typography variant="body2" sx={{ color: '#616161' }}>Address: {selectedFollowup.address}</Typography>
+                    <Button
+                      onClick={() => console.log('View Sales History')}
+                      sx={{ color: green[600], textTransform: 'none', p: 0, mt: 1, '&:hover': { backgroundColor: 'transparent' } }}
                     >
-                      View Sales History 
+                      View Sales History
                     </Button>
                   </Box>
                 </Box>
                 <Button
                   variant="contained"
-                  sx={{ backgroundColor: '#5e35b1', color: 'white', textTransform: 'none', fontWeight: 'bold' }}
+                  sx={{ backgroundColor: green[600], color: 'white', textTransform: 'none', fontWeight: 'bold' }}
                   onClick={() => console.log('Edit Customer')}
                 >
                   Edit Customer

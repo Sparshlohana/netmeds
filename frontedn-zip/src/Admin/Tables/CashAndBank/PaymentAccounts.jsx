@@ -6,6 +6,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { green } from '@mui/material/colors';
+
 
 // Mock data for payment accounts
 const mockAccounts = [
@@ -21,62 +23,62 @@ const ActionButton = styled(Button)(({ theme }) => ({
   borderRadius: '8px',
   padding: '10px 20px',
   color: 'white',
-  backgroundColor: '#5e35b1',
-  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+  backgroundColor: green[600],
+  boxShadow: 'none',
   transition: 'all 0.3s ease',
   '&:hover': {
-    backgroundColor: '#4527a0',
+    backgroundColor: green[700],
     transform: 'translateY(-2px)',
-    boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.4)',
+    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
   },
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
-    color: 'white',
-    backgroundColor: '#1b1b36',
+    color: 'black',
+    backgroundColor: '#FFFFFF',
     borderRadius: '8px',
-    border: '1px solid #333',
+    border: '1px solid #E0E0E0',
     paddingLeft: theme.spacing(1),
     '& fieldset': {
       borderColor: 'transparent',
     },
     '&:hover fieldset': {
-      borderColor: 'transparent',
+      borderColor: '#BDBDBD',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#f06292',
+      borderColor: green[500],
     },
   },
   '& .MuiInputBase-input': {
     padding: '10px 14px',
-    color: 'white',
+    color: 'black',
   },
   '& .MuiInputAdornment-root': {
-    color: 'gray',
+    color: '#757575',
   },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
-  color: 'white',
-  backgroundColor: '#1b1b36',
+  color: 'black',
+  backgroundColor: '#FFFFFF',
   borderRadius: '8px',
-  border: '1px solid #333',
+  border: '1px solid #E0E0E0',
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: 'transparent',
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'transparent',
+    borderColor: '#BDBDBD',
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#f06292',
+    borderColor: green[500],
   },
   '& .MuiSelect-select': {
     padding: '10px 14px',
-    color: 'white',
+    color: 'black',
   },
   '& .MuiSvgIcon-root': {
-    color: 'gray',
+    color: '#757575',
   },
 }));
 
@@ -156,36 +158,36 @@ const PaymentAccounts = () => {
         alt="No data"
         style={{ width: '100%', maxWidth: '300px', opacity: 0.8 }}
       />
-      <Typography variant="body1" sx={{ color: 'gray', mt: 2 }}>
+      <Typography variant="body1" sx={{ color: '#616161', mt: 2 }}>
         No data
       </Typography>
     </Box>
   );
 
   return (
-    <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white' }}>
+    <Box sx={{ p: 3, backgroundColor: '#F5F5F5', minHeight: 'calc(100vh - 64px)', color: 'black' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', color: 'darkgreen' }}>
           Payment Accounts
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Button sx={{ color: '#f06292', textTransform: 'none', '&:hover': { backgroundColor: 'rgba(240, 98, 146, 0.1)' } }}>
+          <Button sx={{ color: green[600], textTransform: 'none', '&:hover': { backgroundColor: 'rgba(0, 128, 0, 0.1)' } }}>
             <InfoOutlinedIcon sx={{ mr: 0.5 }} /> Watch Tutorial
           </Button>
           <ActionButton onClick={() => console.log('Add New Txn')}>
             Add New Txn (F2)
           </ActionButton>
-          <ActionButton onClick={() => console.log('Add New Acc')} sx={{ backgroundColor: '#f06292', '&:hover': { backgroundColor: '#c8507a' } }}>
+          <ActionButton onClick={() => console.log('Add New Acc')} sx={{ backgroundColor: green[600], '&:hover': { backgroundColor: green[700] } }}>
             Add New Acc (F4)
           </ActionButton>
         </Box>
       </Box>
-      <Typography variant="body2" sx={{ color: 'gray', mb: 3 }}>
+      <Typography variant="body2" sx={{ color: '#444', mb: 3 }}>
         Manage & track all of your Cash Flow & Accounts
       </Typography>
 
-      <Card sx={{ backgroundColor: '#1b1b36', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f', mb: 4 }}>
-        <Typography variant="body1" sx={{ color: 'gray', mb: 2, fontWeight: 'bold' }}>Search Accounts</Typography>
+      <Card sx={{ backgroundColor: '#FFFFFF', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0', mb: 4 }}>
+        <Typography variant="body1" sx={{ color: '#616161', mb: 2, fontWeight: 'bold' }}>Search Accounts</Typography>
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
           <StyledTextField
             placeholder="Search by Account Name, IFSC, UTR, etc."
@@ -196,7 +198,7 @@ const PaymentAccounts = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon />
+                  <SearchIcon sx={{ color: '#757575' }} />
                 </InputAdornment>
               ),
             }}
@@ -229,16 +231,16 @@ const PaymentAccounts = () => {
         </Box>
       </Card>
 
-      <Card sx={{ backgroundColor: '#1b1b36', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f' }}>
+      <Card sx={{ backgroundColor: '#FFFFFF', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0' }}>
         {loading ? (
           <Box sx={{ textAlign: 'center', py: 5 }}>
-            <Typography variant="body1" sx={{ color: 'gray' }}>Loading accounts...</Typography>
+            <Typography variant="body1" sx={{ color: '#616161' }}>Loading accounts...</Typography>
           </Box>
         ) : filteredAndSortedAccounts.length > 0 ? (
           <Box sx={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid #333' }}>
+                <tr style={{ borderBottom: '1px solid #E0E0E0' }}>
                   <th style={tableHeaderStyle('name', sortBy, sortOrder)} onClick={() => handleSort('name')}>ACCOUNT NAME / BRANCH</th>
                   <th style={tableHeaderStyle('type', sortBy, sortOrder)} onClick={() => handleSort('type')}>TYPE</th>
                   <th style={tableHeaderStyle('accHolder', sortBy, sortOrder)} onClick={() => handleSort('accHolder')}>ACC HOLDER NAME / UPI</th>
@@ -249,7 +251,7 @@ const PaymentAccounts = () => {
               </thead>
               <tbody>
                 {filteredAndSortedAccounts.map((account) => (
-                  <tr key={account.id} style={{ borderBottom: '1px solid #2e2e4f' }}>
+                  <tr key={account.id} style={{ borderBottom: '1px solid #E0E0E0' }}>
                     <td style={tableCellStyle}>{account.name} {account.branch && `/ ${account.branch}`}</td>
                     <td style={tableCellStyle}>{account.type}</td>
                     <td style={tableCellStyle}>{account.accHolder}</td>
@@ -268,7 +270,7 @@ const PaymentAccounts = () => {
 
       {/* Keyboard Shortcuts Hint */}
       <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Typography variant="caption" sx={{ display: 'block', color: 'gray' }}>
+        <Typography variant="caption" sx={{ display: 'block', color: '#616161' }}>
           Add Txn - F2 | Add Acc - F4 | Select a Card - Up or Down Key | Open a Card - Enter | Scroll to Top - Alt + Up Key
         </Typography>
       </Box>
@@ -283,22 +285,22 @@ const tableHeaderStyle = (columnKey, currentSortBy, currentSortOrder) => ({
   textAlign: 'left',
   fontSize: '0.75rem',
   fontWeight: 'bold',
-  color: 'gray',
+  color: '#616161',
   textTransform: 'uppercase',
   cursor: 'pointer',
-  backgroundColor: '#1b1b36',
+  backgroundColor: '#FFFFFF',
   position: 'sticky',
   top: 0,
   zIndex: 1,
   ...(columnKey === currentSortBy && {
-    color: '#f06292',
+    color: green[600],
   }),
 });
 
 const tableCellStyle = {
   padding: '12px 16px',
   fontSize: '0.875rem',
-  color: 'white',
+  color: 'black',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',

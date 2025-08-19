@@ -8,7 +8,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import SortIcon from '@mui/icons-material/Sort';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday'; // Import Calendar icon
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import { green } from '@mui/material/colors';
 
 // Mock data for sales transactions
 const mockTransactions = [
@@ -24,101 +25,86 @@ const mockTransactions = [
   { id: 'INV010', customer: 'Henry Green', billedOn: '2025-08-01', billedAmt: 1100, netProfit: 220, adjAmt: 0, payable: 1100, balance: 0, paidDue: 'Due', username: 'user2' },
 ];
 
-// Styled component for the search/filter inputs
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
-    color: 'white',
-    backgroundColor: '#1b1b36',
+    color: 'black',
+    backgroundColor: '#FFFFFF',
     borderRadius: '8px',
-    border: '1px solid #333',
-    // Increased padding for more space and taller input
+    border: '1px solid #E0E0E0',
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1), // Added some right padding too
+    paddingRight: theme.spacing(1),
     '& fieldset': {
       borderColor: 'transparent',
     },
     '&:hover fieldset': {
-      borderColor: 'transparent',
+      borderColor: '#BDBDBD',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#f06292',
+      borderColor: green[500],
     },
   },
   '& .MuiInputBase-input': {
-    padding: '12px 14px', // Increased vertical padding for taller input
-    color: 'white',
-  },
-  '& .MuiInputAdornment-root': {
-    color: 'gray',
-    marginRight: theme.spacing(1), // More space for the icon
+    padding: '12px 14px',
+    color: 'black',
   },
   '& .MuiInputLabel-root': {
-    color: 'gray',
+    color: '#757575',
+  },
+  '& .MuiInputAdornment-root': {
+    color: '#757575',
+    marginRight: theme.spacing(1),
   },
   '& .MuiSelect-select': {
     padding: '10px 14px',
-    backgroundColor: '#1b1b36',
+    backgroundColor: '#FFFFFF',
     borderRadius: '8px',
-    color: 'white',
+    color: 'black',
   },
   '& .MuiSvgIcon-root': {
-    color: 'gray',
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#333',
-  },
-  '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#555',
-  },
-  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#f06292',
+    color: '#757575',
   },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
-  color: 'white',
-  backgroundColor: '#1b1b36',
+  color: 'black',
+  backgroundColor: '#FFFFFF',
   borderRadius: '8px',
-  border: '1px solid #333',
+  border: '1px solid #E0E0E0',
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: 'transparent',
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'transparent',
+    borderColor: '#BDBDBD',
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#f06292',
+    borderColor: green[500],
   },
   '& .MuiSelect-select': {
     padding: '10px 14px',
-    backgroundColor: '#1b1b36',
-    borderRadius: '8px',
-    color: 'white',
+    color: 'black',
   },
   '& .MuiSvgIcon-root': {
-    color: 'gray',
+    color: '#757575',
   },
 }));
 
-// Styled component for the date range picker container
 const StyledDateInputContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: '#1b1b36',
+  backgroundColor: '#FFFFFF',
   borderRadius: '8px',
-  border: '1px solid #333',
+  border: '1px solid #E0E0E0',
   display: 'flex',
   alignItems: 'center',
-  padding: '0 10px', // Keep consistent padding for the container
+  padding: '0 10px',
   gap: '4px',
   position: 'relative',
   '&:hover': {
-    borderColor: '#555',
+    borderColor: '#BDBDBD',
   },
   '&:focus-within': {
-    borderColor: '#f06292',
+    borderColor: green[500],
   },
 }));
 
-// Styled component for date input fields within the date range picker
 const StyledDateTextField = styled(TextField)(({ theme }) => ({
   flexGrow: 1,
   '& .MuiInputBase-root': {
@@ -130,7 +116,7 @@ const StyledDateTextField = styled(TextField)(({ theme }) => ({
   },
   '& input[type="date"]': {
     padding: '12px 0px',
-    color: 'white',
+    color: 'black',
     width: '100%',
     boxSizing: 'border-box',
   },
@@ -139,29 +125,30 @@ const StyledDateTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-// Action Button Styling
 const ActionButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   fontWeight: 'bold',
   borderRadius: '8px',
   padding: '10px 20px',
-  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+  boxShadow: 'none',
   transition: 'all 0.3s ease',
   '&:hover': {
     transform: 'translateY(-2px)',
-    boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.4)',
+    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
   },
 }));
 
 const CreateSalesInvoiceButton = styled(ActionButton)({
-  backgroundColor: '#5e35b1',
+  backgroundColor: green[600],
+  color: 'white',
   '&:hover': {
-    backgroundColor: '#4527a0',
+    backgroundColor: green[700],
   },
 });
 
 const ViewCustomersButton = styled(ActionButton)({
   backgroundColor: '#424242',
+  color: 'white',
   '&:hover': {
     backgroundColor: '#212121',
   },
@@ -179,7 +166,6 @@ const InvoicesSalesPage = () => {
   const [sortBy, setSortBy] = useState('billedOn');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  // Simulate data fetching
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
@@ -188,26 +174,17 @@ const InvoicesSalesPage = () => {
     }, 500);
   }, []);
 
-  // Filter and sort transactions using useMemo for performance optimization
   const filteredAndSortedTransactions = useMemo(() => {
     let result = [...transactions];
-
-    // Apply Invoice No search
     if (invoiceNoSearch) {
       result = result.filter(t => t.id.toLowerCase().includes(invoiceNoSearch.toLowerCase()));
     }
-
-    // Apply Customer Name / Info search
     if (customerInfoSearch) {
       result = result.filter(t => t.customer.toLowerCase().includes(customerInfoSearch.toLowerCase()));
     }
-
-    // Apply Paid / Due filter
     if (filterByPaidDue) {
       result = result.filter(t => t.paidDue.toLowerCase() === filterByPaidDue.toLowerCase());
     }
-
-    // Apply date range filter
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -217,20 +194,15 @@ const InvoicesSalesPage = () => {
       });
     }
 
-    // Apply sorting
     result.sort((a, b) => {
       let valA = a[sortBy];
       let valB = b[sortBy];
-
-      // Handle string comparison for names/IDs
       if (typeof valA === 'string' && typeof valB === 'string') {
         return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
       }
-      // Handle numeric comparison for amounts
       if (typeof valA === 'number' && typeof valB === 'number') {
         return sortOrder === 'asc' ? valA - valB : valB - valA;
       }
-      // Handle date comparison (assuming 'YYYY-MM-DD' format)
       if (sortBy === 'billedOn') {
         const dateA = new Date(valA);
         const dateB = new Date(valB);
@@ -255,20 +227,19 @@ const InvoicesSalesPage = () => {
     return filteredAndSortedTransactions.reduce((sum, t) => sum + t[key], 0);
   };
 
-  // Helper component for summary cards
   const SummaryCard = ({ title, value }) => (
     <Card sx={{
-      backgroundColor: '#1b1b36',
+      backgroundColor: '#FFFFFF',
       p: 2,
       borderRadius: '8px',
       boxShadow: 'none',
-      border: '1px solid #2e2e4f',
+      border: '1px solid #E0E0E0',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start'
     }}>
-      <Typography variant="body2" sx={{ color: 'gray', mb: 0.5 }}>{title}</Typography>
-      <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>{value}</Typography>
+      <Typography variant="body2" sx={{ color: '#444', mb: 0.5 }}>{title}</Typography>
+      <Typography variant="h6" sx={{ color: 'darkgreen', fontWeight: 'bold' }}>{value}</Typography>
     </Card>
   );
 
@@ -289,18 +260,17 @@ const InvoicesSalesPage = () => {
         alt="Empty data illustration"
         style={{ width: '100%', maxWidth: '300px', opacity: 0.8 }}
       />
-      <Typography variant="body1" sx={{ color: 'gray', mt: 2 }}>
+      <Typography variant="body1" sx={{ color: '#616161', mt: 2 }}>
         We've Plenty Of Space For Your Data, We Promise!
       </Typography>
     </Box>
   );
 
   return (
-    <Box sx={{ p: 3, backgroundColor: '#0d0d1a', minHeight: 'calc(100vh - 64px)', color: 'white' }}>
-      <Typography variant="h5" component="h1" sx={{ mb: 1, fontWeight: 'bold' }}>Sales Transactions</Typography>
-      <Typography variant="body2" sx={{ color: 'gray', mb: 3 }}>View list of all your Sales transactions here</Typography>
+    <Box sx={{ p: 3, backgroundColor: '#F5F5F5', minHeight: 'calc(100vh - 64px)', color: 'black' }}>
+      <Typography variant="h5" component="h1" sx={{ mb: 1, fontWeight: 'bold', color: 'darkgreen' }}>Sales Transactions</Typography>
+      <Typography variant="body2" sx={{ color: '#444', mb: 3 }}>View list of all your Sales transactions here</Typography>
 
-      {/* Sales Summary Cards */}
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 2, mb: 4 }}>
         <SummaryCard title="Sales Count" value={filteredAndSortedTransactions.length} />
         <SummaryCard title="Sales Amt Sum" value={`$${calculateSummary('billedAmt').toFixed(2)}`} />
@@ -309,18 +279,17 @@ const InvoicesSalesPage = () => {
         <SummaryCard title="Balance Sum" value={`$${calculateSummary('balance').toFixed(2)}`} />
       </Box>
 
-      {/* Search | Filter | Sort Section */}
-      <Card sx={{ backgroundColor: '#1b1b36', p: 3 ,borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f', mb: 4 }}>
-        <Typography variant="body1" sx={{ color: 'gray', mb: 2, fontWeight: 'bold' }}>Search | Filter | Sort</Typography>
+      <Card sx={{ backgroundColor: '#FFFFFF', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0', mb: 4 }}>
+        <Typography variant="body1" sx={{ color: 'darkgreen', mb: 2, fontWeight: 'bold' }}>Search | Filter | Sort</Typography>
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
-          <StyledTextField 
+          <StyledTextField
             label="Invoice No"
             variant="outlined"
             value={invoiceNoSearch}
             onChange={(e) => setInvoiceNoSearch(e.target.value)}
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start" sx={{ mr: 2, mt:1 }}> {/* Increased margin-right */}
+                <InputAdornment position="start" sx={{ mr: 2, mt: 1 }}>
                   <SearchIcon />
                 </InputAdornment>
               ),
@@ -333,13 +302,12 @@ const InvoicesSalesPage = () => {
             onChange={(e) => setCustomerInfoSearch(e.target.value)}
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start" sx={{ mr: 2 ,mt:1 }}> {/* Increased margin-right */}
+                <InputAdornment position="start" sx={{ mr: 2, mt: 1 }}>
                   <SearchIcon />
                 </InputAdornment>
               ),
             }}
           />
-          {/* Date Range Picker - Improved Styling */}
           <StyledDateInputContainer>
             <StyledDateTextField
               type="date"
@@ -348,7 +316,7 @@ const InvoicesSalesPage = () => {
               onChange={(e) => setStartDate(e.target.value)}
               InputProps={{ disableUnderline: true }}
             />
-            <Typography sx={{ color: 'white', mx: 0.5 }}>-</Typography> {/* Adjusted margin for hyphen */}
+            <Typography sx={{ color: 'black', mx: 0.5 }}>-</Typography>
             <StyledDateTextField
               type="date"
               variant="standard"
@@ -356,12 +324,10 @@ const InvoicesSalesPage = () => {
               onChange={(e) => setEndDate(e.target.value)}
               InputProps={{ disableUnderline: true }}
             />
-            {/* Calendar icon positioned outside individual text fields but within the container */}
             <InputAdornment position="end">
-              <CalendarTodayIcon sx={{ color: 'gray', mr: 1 }} /> {/* Added right margin to icon */}
+              <CalendarTodayIcon sx={{ color: '#757575', mr: 1 }} />
             </InputAdornment>
           </StyledDateInputContainer>
-          {/* End Date Range Picker */}
 
           <StyledSelect
             value={filterByPaidDue}
@@ -369,9 +335,9 @@ const InvoicesSalesPage = () => {
             displayEmpty
             inputProps={{ 'aria-label': 'Without label' }}
             startAdornment={
-                <InputAdornment position="start">
-                    <FilterListIcon sx={{ color: 'gray' }} />
-                </InputAdornment>
+              <InputAdornment position="start">
+                <FilterListIcon sx={{ color: '#757575' }} />
+              </InputAdornment>
             }
           >
             <MenuItem value="">FILTER BY</MenuItem>
@@ -384,9 +350,9 @@ const InvoicesSalesPage = () => {
             displayEmpty
             inputProps={{ 'aria-label': 'Without label' }}
             startAdornment={
-                <InputAdornment position="start">
-                    <SortIcon sx={{ color: 'gray' }} />
-                </InputAdornment>
+              <InputAdornment position="start">
+                <SortIcon sx={{ color: '#757575' }} />
+              </InputAdornment>
             }
           >
             <MenuItem value="billedOn">SORT BY Date</MenuItem>
@@ -397,32 +363,31 @@ const InvoicesSalesPage = () => {
         </Box>
       </Card>
 
-      {/* Sales Transactions Table */}
-      <Card sx={{ backgroundColor: '#1b1b36', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #2e2e4f' }}>
+      <Card sx={{ backgroundColor: '#FFFFFF', p: 3, borderRadius: '8px', boxShadow: 'none', border: '1px solid #E0E0E0' }}>
         {loading ? (
           <Box sx={{ textAlign: 'center', py: 5 }}>
-            <Typography variant="body1" sx={{ color: 'gray' }}>Loading sales transactions...</Typography>
+            <Typography variant="body1" sx={{ color: '#616161' }}>Loading sales transactions...</Typography>
           </Box>
         ) : filteredAndSortedTransactions.length > 0 ? (
           <Box sx={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid #333' }}>
-                  <th style={tableHeaderStyle('id', sortBy, sortOrder)} onClick={() => toggleSortOrder('id')}>INVOICE NO</th>
-                  <th style={tableHeaderStyle('customer', sortBy, sortOrder)} onClick={() => toggleSortOrder('customer')}>CUSTOMER NAME / INFO</th>
-                  <th style={tableHeaderStyle('billedOn', sortBy, sortOrder)} onClick={() => toggleSortOrder('billedOn')}>BILLED ON</th>
-                  <th style={tableHeaderStyle('billedAmt', sortBy, sortOrder)} onClick={() => toggleSortOrder('billedAmt')}>INV AMT</th>
-                  <th style={tableHeaderStyle('netProfit', sortBy, sortOrder)} onClick={() => toggleSortOrder('netProfit')}>NET PROFIT</th>
-                  <th style={tableHeaderStyle('adjAmt', sortBy, sortOrder)} onClick={() => toggleSortOrder('adjAmt')}>ADJ AMT</th>
-                  <th style={tableHeaderStyle('payable', sortBy, sortOrder)} onClick={() => toggleSortOrder('payable')}>PAYABLE</th>
-                  <th style={tableHeaderStyle('balance', sortBy, sortOrder)} onClick={() => toggleSortOrder('balance')}>BALANCE</th>
-                  <th style={tableHeaderStyle('paidDue', sortBy, sortOrder)} onClick={() => toggleSortOrder('paidDue')}>PAID / DUE</th>
-                  <th style={tableHeaderStyle('username', sortBy, sortOrder)} onClick={() => toggleSortOrder('username')}>USERNAME</th>
+                <tr style={{ borderBottom: '1px solid #E0E0E0' }}>
+                  <th style={tableHeaderStyle('id', sortBy, sortOrder)}>INVOICE NO</th>
+                  <th style={tableHeaderStyle('customer', sortBy, sortOrder)}>CUSTOMER NAME / INFO</th>
+                  <th style={tableHeaderStyle('billedOn', sortBy, sortOrder)}>BILLED ON</th>
+                  <th style={tableHeaderStyle('billedAmt', sortBy, sortOrder)}>INV AMT</th>
+                  <th style={tableHeaderStyle('netProfit', sortBy, sortOrder)}>NET PROFIT</th>
+                  <th style={tableHeaderStyle('adjAmt', sortBy, sortOrder)}>ADJ AMT</th>
+                  <th style={tableHeaderStyle('payable', sortBy, sortOrder)}>PAYABLE</th>
+                  <th style={tableHeaderStyle('balance', sortBy, sortOrder)}>BALANCE</th>
+                  <th style={tableHeaderStyle('paidDue', sortBy, sortOrder)}>PAID / DUE</th>
+                  <th style={tableHeaderStyle('username', sortBy, sortOrder)}>USERNAME</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredAndSortedTransactions.map((transaction) => (
-                  <tr key={transaction.id} style={{ borderBottom: '1px solid #2e2e4f' }}>
+                  <tr key={transaction.id} style={{ borderBottom: '1px solid #E0E0E0' }}>
                     <td style={tableCellStyle}>{transaction.id}</td>
                     <td style={tableCellStyle}>{transaction.customer}</td>
                     <td style={tableCellStyle}>{transaction.billedOn}</td>
@@ -437,8 +402,8 @@ const InvoicesSalesPage = () => {
                         borderRadius: '12px',
                         fontSize: '0.75rem',
                         fontWeight: 'bold',
-                        backgroundColor: transaction.paidDue === 'Paid' ? '#4CAF5033' : '#F4433633', // Green/Red with opacity
-                        color: transaction.paidDue === 'Paid' ? '#4CAF50' : '#F44336', // Solid Green/Red
+                        backgroundColor: transaction.paidDue === 'Paid' ? green[100] : '#F443361A',
+                        color: transaction.paidDue === 'Paid' ? green[700] : '#F44336',
                       }}>
                         {transaction.paidDue}
                       </span>
@@ -454,7 +419,6 @@ const InvoicesSalesPage = () => {
         )}
       </Card>
 
-      {/* Action Buttons */}
       <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 4 }}>
         <CreateSalesInvoiceButton
           variant="contained"
@@ -472,8 +436,7 @@ const InvoicesSalesPage = () => {
         </ViewCustomersButton>
       </Box>
 
-      {/* Keyboard Shortcuts Hint */}
-      <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', color: 'gray', mt: 3 }}>
+      <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', color: '#616161', mt: 3 }}>
         Create New Sales - F2 | Move up or Down - Arrow Keys | To Open - Enter
       </Typography>
     </Box>
@@ -487,21 +450,21 @@ const tableHeaderStyle = (columnKey, currentSortBy, currentSortOrder) => ({
   textAlign: 'left',
   fontSize: '0.75rem',
   fontWeight: 'bold',
-  color: 'gray', // Lighter color for headers
+  color: 'darkgreen',
   textTransform: 'uppercase',
   cursor: 'pointer',
-  backgroundColor: '#1b1b36', // Match card background for header row
+  backgroundColor: '#FFFFFF',
   position: 'sticky',
   top: 0,
   zIndex: 1,
   ...(columnKey === currentSortBy && {
-    color: '#f06292', // Highlight color
+    color: '#000000',
   }),
 });
 
 const tableCellStyle = {
   padding: '12px 16px',
   fontSize: '0.875rem',
-  color: 'white',
+  color: 'black',
   whiteSpace: 'nowrap',
 };

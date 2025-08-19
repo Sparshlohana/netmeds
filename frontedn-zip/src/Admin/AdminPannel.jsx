@@ -22,7 +22,7 @@ import { getUser, logout } from "../Redux/Auth/Action";
 import "./AdminPannel.css";
 import AdminNavbar from "./Navigation/AdminNavbar";
 import Dashboard from "./Views/Admin";
-import { customTheme } from "./them/customeThem";
+import { customerTheme } from "./them/customeThem";
 
 // Icons
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -198,14 +198,16 @@ export default function AdminPannel() {
           flexDirection: "column",
           height: "100%",
           paddingTop: isLargeScreen ? 0 : "64px",
+          backgroundColor: '#FFFFFF', // White background for the drawer
+          color: '#1A1A1A', // Dark text color for the drawer
           "&::-webkit-scrollbar": { width: "5px" },
-          "&::-webkit-scrollbar-track": { backgroundColor: "#000016" },
-          "&::-webkit-scrollbar-thumb": { backgroundColor: "rgb(30, 41, 59)", borderRadius: "2px" },
+          "&::-webkit-scrollbar-track": { backgroundColor: "#f0f0f0" },
+          "&::-webkit-scrollbar-thumb": { backgroundColor: "#BDBDBD", borderRadius: "2px" },
         }}
       >
         {isLargeScreen && <Toolbar />}
 
-        <Divider sx={{ my: 1, backgroundColor: "rgba(255,255,255,0.2)" }} />
+        <Divider sx={{ my: 1, backgroundColor: "#E0E0E0" }} />
 
         <List sx={{ flexGrow: 1 }}>
           {menu.map((item) =>
@@ -216,11 +218,15 @@ export default function AdminPannel() {
                   selected={item.subheadings.some((s) => location.pathname.startsWith(s.path))}
                   sx={{
                     "&.Mui-selected": {
-                      backgroundColor: "rgba(255,255,255,0.08)",
+                      backgroundColor: "rgba(0, 128, 0, 0.1)", // Light green highlight for selected item
                     },
+                    color: '#1A1A1A',
+                    "&:hover": {
+                      backgroundColor: 'rgba(0, 128, 0, 0.05)',
+                    }
                   }}
                 >
-                  <ListItemIcon sx={{ color: "rgba(255,255,255,0.8)" }}>{item.icon}</ListItemIcon>
+                  <ListItemIcon sx={{ color: "darkgreen" }}>{item.icon}</ListItemIcon>
                   <ListItemText primary={item.name} />
                   {openMap[item.name] ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
@@ -234,7 +240,7 @@ export default function AdminPannel() {
                         selected={location.pathname === subItem.path}
                         dense
                       >
-                        <ListItemIcon sx={{ color: "rgba(255,255,255,0.8)" }}>{subItem.icon}</ListItemIcon>
+                        <ListItemIcon sx={{ color: "darkgreen" }}>{subItem.icon}</ListItemIcon>
                         <ListItemText primary={subItem.name} />
                       </ListItemButton>
                     ))}
@@ -247,8 +253,17 @@ export default function AdminPannel() {
                   onClick={() => navigate(item.path)}
                   selected={location.pathname === item.path}
                   dense
+                  sx={{
+                    "&.Mui-selected": {
+                      backgroundColor: "rgba(0, 128, 0, 0.1)", // Light green highlight for selected item
+                    },
+                    color: '#1A1A1A',
+                    "&:hover": {
+                      backgroundColor: 'rgba(0, 128, 0, 0.05)',
+                    }
+                  }}
                 >
-                  <ListItemIcon sx={{ color: "rgba(255,255,255,0.8)" }}>{item.icon}</ListItemIcon>
+                  <ListItemIcon sx={{ color: "darkgreen" }}>{item.icon}</ListItemIcon>
                   <ListItemText primary={item.name} />
                 </ListItemButton>
               </ListItem>
@@ -257,7 +272,7 @@ export default function AdminPannel() {
         </List>
 
         <List>
-          <Divider />
+          <Divider sx={{ backgroundColor: "#E0E0E0" }} />
           <ListItem onClick={handleLogout} disablePadding>
             <ListItemButton>
               <Avatar
@@ -271,7 +286,7 @@ export default function AdminPannel() {
               >
                 {auth.user?.firstName?.[0]?.toUpperCase() || "U"}
               </Avatar>
-              <ListItemText className="ml-5" primary="Logout" />
+              <ListItemText className="ml-5" primary="Logout" sx={{ color: '#1A1A1A' }} />
             </ListItemButton>
           </ListItem>
         </List>
@@ -284,7 +299,7 @@ export default function AdminPannel() {
   const handleCloseSideBar = () => setSideBarVisible(false);
 
   return (
-    <ThemeProvider theme={customTheme}>
+    <ThemeProvider theme={customerTheme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AdminNavbar handleSideBarViewInMobile={handleSideBarViewInMobile} />
@@ -300,8 +315,8 @@ export default function AdminPannel() {
             [`& .MuiDrawer-paper`]: {
               width: drawerWidth,
               boxSizing: "border-box",
-              backgroundColor: "#000016",
-              color: "rgba(255,255,255,0.8)",
+              backgroundColor: '#FFFFFF', // White background
+              color: '#1A1A1A', // Dark text color
               ...(!isLargeScreen && {
                 top: 0,
                 [`&.MuiDrawer-paperAnchorLeft`]: {
@@ -316,7 +331,7 @@ export default function AdminPannel() {
           {drawer}
         </Drawer>
 
-        <Box className="adminContainer" component="main" sx={{ flexGrow: 1, p: 3, pt: 8, minHeight: "100vh" }}>
+        <Box className="adminContainer" component="main" sx={{ flexGrow: 1, p: 3, pt: 8, minHeight: "100vh", backgroundColor: '#F5F5F5' }}>
           <Toolbar />
           <Routes>
             {/* Dashboard */}
