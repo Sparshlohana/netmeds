@@ -1,31 +1,26 @@
 // components/Auth/Login.jsx
 
 import * as React from "react";
-import { Grid, TextField, Button, Box, Typography } from "@mui/material"; // Removed Snackbar, Alert
+import { Grid, TextField, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, login } from "../../../Redux/Auth/Action"; // Adjust path
+import { getUser, login } from "../../../Redux/Auth/Action";
 import { useEffect } from "react";
-import { useState } from "react";
 
-export default function LoginUserForm({ onAuthSuccess }) { // Added onAuthSuccess prop
+export default function LoginUserForm({ onAuthSuccess }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const { auth } = useSelector((store) => store);
 
-  useEffect(() => {
+useEffect(() => {
     if (jwt) {
       dispatch(getUser(jwt));
     }
-  }, [jwt, dispatch]);
+}, [jwt, dispatch]);
 
-  // Use a separate effect to trigger onAuthSuccess when login is successful
-  // This ensures the modal switches to OTP *before* any final redirection
   useEffect(() => {
     if (auth.user && !auth.error && onAuthSuccess) {
-      // Only call onAuthSuccess if user is set and no error, and the callback exists
-      // This is where you'd typically check if OTP is needed for this login type
       onAuthSuccess();
     }
   }, [auth.user, auth.error, onAuthSuccess]);
@@ -73,7 +68,7 @@ export default function LoginUserForm({ onAuthSuccess }) { // Added onAuthSucces
 
           <Grid item xs={12}>
             <Button
-              className="bg-[#9155FD] w-full" // Consider replacing Tailwind classes with MUI sx for consistency
+              className="bg-[#9155FD] w-full"
               type="submit"
               variant="contained"
               size="large"

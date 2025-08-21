@@ -1,16 +1,14 @@
-import { useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductReviewCard from "./ProductReviewCard";
 import { Box, Button, Grid, LinearProgress, Rating } from "@mui/material";
 import HomeProductCard from "../../Home/HomeProductCard";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { findProductById } from "../../../../Redux/Customers/Product/Action";
 import { addItemToCart } from "../../../../Redux/Customers/Cart/Action";
 import { getAllReviews } from "../../../../Redux/Customers/Review/Action";
-import { lengha_page1 } from "../../../../Data/Women/LenghaCholi";
-import { gounsPage1 } from "../../../../Data/Gouns/gouns";
+import { productdata } from "../../../../data";
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -70,10 +68,9 @@ export default function ProductDetails() {
   const [activeImage, setActiveImage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { customersProduct,review } = useSelector((store) => store);
+  const { customersProduct, review } = useSelector((store) => store);
   const { productId } = useParams();
   const jwt = localStorage.getItem("jwt");
-  // console.log("param",productId,customersProduct.product)
 
   const handleSetActiveImage = (image) => {
     setActiveImage(image);
@@ -89,9 +86,7 @@ export default function ProductDetails() {
     const data = { productId: productId, jwt };
     dispatch(findProductById(data));
     dispatch(getAllReviews(productId));
-  }, [productId]);
-
-  // console.log("reviews ",review)
+  }, [productId, dispatch, jwt]);
 
   return (
     <div className="bg-white lg:px-20">
@@ -138,8 +133,8 @@ export default function ProductDetails() {
         {/* product details */}
         <section className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2 px-4 pt-10">
           {/* Image gallery */}
-          <div className="flex flex-col items-center ">
-            <div className=" overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem]">
+          <div className="flex flex-col items-center">
+            <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem]">
               <img
                 src={activeImage?.src || customersProduct.product?.imageUrl}
                 alt={product.images[0].alt}
@@ -151,10 +146,11 @@ export default function ProductDetails() {
                 <div
                   onClick={() => handleSetActiveImage(image)}
                   className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg max-w-[5rem] max-h-[5rem] mt-4"
+                  key={image.src}
                 >
                   <img
                     src={image.src}
-                    alt={product.images[1].alt}
+                    alt={image.alt}
                     className="h-full w-full object-cover object-center"
                   />
                 </div>
@@ -163,9 +159,9 @@ export default function ProductDetails() {
           </div>
 
           {/* Product info */}
-          <div className="lg:col-span-1 mx-auto max-w-2xl px-4 pb-16 sm:px-6  lg:max-w-7xl  lg:px-8 lg:pb-24">
+          <div className="lg:col-span-1 mx-auto max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
             <div className="lg:col-span-2">
-              <h1 className="text-lg lg:text-xl font-semibold tracking-tight text-gray-900  ">
+              <h1 className="text-lg lg:text-xl font-semibold tracking-tight text-gray-900">
                 {customersProduct.product?.brand}
               </h1>
               <h1 className="text-lg lg:text-xl tracking-tight text-gray-900 opacity-60 pt-1">
@@ -191,17 +187,16 @@ export default function ProductDetails() {
               {/* Reviews */}
               <div className="mt-6">
                 <h3 className="sr-only">Reviews</h3>
-
                 <div className="flex items-center space-x-3">
                   <Rating
                     name="read-only"
                     value={4.6}
                     precision={0.5}
                     readOnly
+                    sx={{ color: '#008000' }}
                   />
-
                   <p className="opacity-60 text-sm">42807 Ratings</p>
-                  <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                  <p className="ml-3 text-sm font-medium text-green-600 hover:text-green-500">
                     {reviews.totalCount} reviews
                   </p>
                 </div>
@@ -213,7 +208,6 @@ export default function ProductDetails() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-medium text-gray-900">Size</h3>
                   </div>
-
                   <RadioGroup
                     value={selectedSize}
                     onChange={setSelectedSize}
@@ -223,7 +217,7 @@ export default function ProductDetails() {
                       Choose a size
                     </RadioGroup.Label>
                     <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-10">
-                      {product.sizes.map((size) => (
+                      {customersProduct.product?.sizes?.map((size) => (
                         <RadioGroup.Option
                           key={size.name}
                           value={size}
@@ -233,12 +227,12 @@ export default function ProductDetails() {
                               size.inStock
                                 ? "cursor-pointer bg-white text-gray-900 shadow-sm"
                                 : "cursor-not-allowed bg-gray-50 text-gray-200",
-                              active ? "ring-1 ring-indigo-500" : "",
+                              active ? "ring-2 ring-green-500" : "",
                               "group relative flex items-center justify-center rounded-md border py-1 px-1 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
                             )
                           }
                         >
-                          {({ active, checked }) => (
+                          {({ checked }) => (
                             <>
                               <RadioGroup.Label as="span">
                                 {size.name}
@@ -246,11 +240,10 @@ export default function ProductDetails() {
                               {size.inStock ? (
                                 <span
                                   className={classNames(
-                                    active ? "border" : "border-2",
                                     checked
-                                      ? "border-indigo-500"
+                                      ? "border-green-500"
                                       : "border-transparent",
-                                    "pointer-events-none absolute -inset-px rounded-md"
+                                    "pointer-events-none absolute -inset-px rounded-md border-2"
                                   )}
                                   aria-hidden="true"
                                 />
@@ -286,7 +279,12 @@ export default function ProductDetails() {
                 <Button
                   variant="contained"
                   type="submit"
-                  sx={{ padding: ".8rem 2rem", marginTop: "2rem" }}
+                  sx={{
+                    padding: ".8rem 2rem",
+                    marginTop: "2rem",
+                    bgcolor: "#4CAF50",
+                    "&:hover": { bgcolor: "#388E3C" },
+                  }}
                 >
                   Add To Cart
                 </Button>
@@ -297,7 +295,6 @@ export default function ProductDetails() {
               {/* Description and details */}
               <div>
                 <h3 className="sr-only">Description</h3>
-
                 <div className="space-y-6">
                   <p className="text-base text-gray-900">
                     {customersProduct.product?.description}
@@ -306,10 +303,7 @@ export default function ProductDetails() {
               </div>
 
               <div className="mt-10">
-                <h3 className="text-sm font-medium text-gray-900">
-                  Highlights
-                </h3>
-
+                <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
                 <div className="mt-4">
                   <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
                     {product.highlights.map((highlight) => (
@@ -323,7 +317,6 @@ export default function ProductDetails() {
 
               <div className="mt-10">
                 <h2 className="text-sm font-medium text-gray-900">Details</h2>
-
                 <div className="mt-4 space-y-6">
                   <p className="text-sm text-gray-600">{product.details}</p>
                 </div>
@@ -333,17 +326,16 @@ export default function ProductDetails() {
         </section>
 
         {/* rating and review section */}
-        <section className="">
+        <section className="px-4">
           <h1 className="font-semibold text-lg pb-4">
             Recent Review & Ratings
           </h1>
-
           <div className="border p-5">
             <Grid container spacing={7}>
               <Grid item xs={7}>
                 <div className="space-y-5">
-                  { review.reviews?.map((item, i) => (
-                    <ProductReviewCard item={item} />
+                  {review.reviews?.map((item, i) => (
+                    <ProductReviewCard item={item} key={i} />
                   ))}
                 </div>
               </Grid>
@@ -356,133 +348,91 @@ export default function ProductDetails() {
                     value={4.6}
                     precision={0.5}
                     readOnly
+                    sx={{ color: '#008000' }}
                   />
-
                   <p className="opacity-60">42807 Ratings</p>
                 </div>
                 <Box>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                  >
-                    <Grid xs={2}>
+                  <Grid container justifyContent="center" alignItems="center" gap={2}>
+                    <Grid item xs={2}>
                       <p className="p-0">Excellent</p>
                     </Grid>
-                    <Grid xs={7}>
+                    <Grid item xs={7}>
                       <LinearProgress
-                        className=""
-                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
+                        sx={{ bgcolor: "#e8f5e9", borderRadius: 4, height: 7, '& .MuiLinearProgress-bar': { bgcolor: '#008000' } }}
                         variant="determinate"
                         value={40}
-                        color="success"
                       />
                     </Grid>
-                    <Grid xs={2}>
+                    <Grid item xs={2}>
                       <p className="opacity-50 p-2">19259</p>
                     </Grid>
                   </Grid>
                 </Box>
                 <Box>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                  >
-                    <Grid xs={2}>
+                  <Grid container justifyContent="center" alignItems="center" gap={2}>
+                    <Grid item xs={2}>
                       <p className="p-0">Very Good</p>
                     </Grid>
-                    <Grid xs={7}>
+                    <Grid item xs={7}>
                       <LinearProgress
-                        className=""
-                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
+                        sx={{ bgcolor: "#e8f5e9", borderRadius: 4, height: 7, '& .MuiLinearProgress-bar': { bgcolor: '#8BC34A' } }}
                         variant="determinate"
                         value={30}
-                        color="success"
                       />
                     </Grid>
-                    <Grid xs={2}>
+                    <Grid item xs={2}>
                       <p className="opacity-50 p-2">19259</p>
                     </Grid>
                   </Grid>
                 </Box>
                 <Box>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                  >
-                    <Grid xs={2}>
+                  <Grid container justifyContent="center" alignItems="center" gap={2}>
+                    <Grid item xs={2}>
                       <p className="p-0">Good</p>
                     </Grid>
-                    <Grid xs={7}>
+                    <Grid item xs={7}>
                       <LinearProgress
-                        className="bg-[#885c0a]"
-                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
+                        sx={{ bgcolor: "#e8f5e9", borderRadius: 4, height: 7, '& .MuiLinearProgress-bar': { bgcolor: '#FFC107' } }}
                         variant="determinate"
                         value={25}
-                        color="orange"
                       />
                     </Grid>
-                    <Grid xs={2}>
+                    <Grid item xs={2}>
                       <p className="opacity-50 p-2">19259</p>
                     </Grid>
                   </Grid>
                 </Box>
                 <Box>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                  >
-                    <Grid xs={2}>
-                      <p className="p-0">Avarage</p>
+                  <Grid container justifyContent="center" alignItems="center" gap={2}>
+                    <Grid item xs={2}>
+                      <p className="p-0">Average</p>
                     </Grid>
-                    <Grid xs={7}>
+                    <Grid item xs={7}>
                       <LinearProgress
-                        className=""
-                        sx={{
-                          bgcolor: "#d0d0d0",
-                          borderRadius: 4,
-                          height: 7,
-                          "& .MuiLinearProgress-bar": {
-                            bgcolor: "#885c0a", // stroke color
-                          },
-                        }}
+                        sx={{ bgcolor: "#e8f5e9", borderRadius: 4, height: 7, '& .MuiLinearProgress-bar': { bgcolor: '#FF9800' } }}
                         variant="determinate"
                         value={21}
-                        color="success"
                       />
                     </Grid>
-                    <Grid xs={2}>
+                    <Grid item xs={2}>
                       <p className="opacity-50 p-2">19259</p>
                     </Grid>
                   </Grid>
                 </Box>
                 <Box>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                    gap={2}
-                  >
-                    <Grid xs={2}>
+                  <Grid container justifyContent="center" alignItems="center" gap={2}>
+                    <Grid item xs={2}>
                       <p className="p-0">Poor</p>
                     </Grid>
-                    <Grid xs={7}>
+                    <Grid item xs={7}>
                       <LinearProgress
-                        className=""
-                        sx={{ bgcolor: "#d0d0d0", borderRadius: 4, height: 7 }}
+                        sx={{ bgcolor: "#e8f5e9", borderRadius: 4, height: 7, '& .MuiLinearProgress-bar': { bgcolor: '#F44336' } }}
                         variant="determinate"
                         value={10}
-                        color="error"
                       />
                     </Grid>
-                    <Grid xs={2}>
+                    <Grid item xs={2}>
                       <p className="opacity-50 p-2">19259</p>
                     </Grid>
                   </Grid>
@@ -493,11 +443,11 @@ export default function ProductDetails() {
         </section>
 
         {/* similer product */}
-        <section className=" pt-10">
-          <h1 className="py-5 text-xl font-bold">Similer Products</h1>
+        <section className="pt-10">
+          <h1 className="py-5 text-xl font-bold">Similar Products</h1>
           <div className="flex flex-wrap space-y-5">
-            {gounsPage1.map((item) => (
-              <HomeProductCard product={item} />
+            {productdata.map((item) => (
+              <HomeProductCard product={item} key={item.id} />
             ))}
           </div>
         </section>

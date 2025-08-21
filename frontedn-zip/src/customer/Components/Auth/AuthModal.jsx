@@ -2,15 +2,13 @@
 
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import RegisterUserForm from "./Register"; // Assuming path: components/Auth/Register.jsx
-import LoginUserForm from "./Login";     // Assuming path: components/Auth/Login.jsx
-import OTPVerificationPage from "./OTPVerificationPage"; // Assuming path: components/Auth/OTPVerificationPage.jsx
+import RegisterUserForm from "./Register";
+import LoginUserForm from "./Login";
+import OTPVerificationPage from "./OTPVerificationPage";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Alert, Snackbar } from "@mui/material";
-
-// Removed: import { register as registerAction } from "../../Redux/Auth/Action";
 
 const style = {
   position: "absolute",
@@ -31,18 +29,16 @@ export default function AuthModal({ handleClose, open }) {
   const dispatch = useDispatch();
 
   const [showOtpInput, setShowOtpInput] = useState(false);
-  const [userPhoneNumber, setUserPhoneNumber] = useState(''); // State to store phone number for OTP
-  const [userEmail, setUserEmail] = useState(''); // State to store email for OTP page display
-  const [userRegistrationData, setUserRegistrationData] = useState(null); // State to store full registration data
+  const [userPhoneNumber, setUserPhoneNumber] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userRegistrationData, setUserRegistrationData] = useState(null);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  // Handle Redux auth state changes for final redirection
   useEffect(() => {
     if (auth.user) {
-      // If user is authenticated, close modal and redirect
       handleClose();
       if (auth.user?.role === "ADMIN") {
         navigate('/admin');
@@ -56,29 +52,18 @@ export default function AuthModal({ handleClose, open }) {
     }
   }, [auth.user, auth.error, handleClose, navigate]);
 
-  // Callback from RegisterUserForm after initial submission
-  // Now accepts email as the second argument
   const handleRegistrationSuccess = (phoneNumber, email, registrationData) => {
     setUserPhoneNumber(phoneNumber);
-    setUserEmail(email); // Store the email
-    setUserRegistrationData(registrationData); // Store full data for later use if needed
+    setUserEmail(email);
+    setUserRegistrationData(registrationData);
     setShowOtpInput(true);
-    // Changed message to use email
-    setSnackbarMessage(`OTP sent to ${email}!`); 
+    setSnackbarMessage(`OTP sent to ${email}!`);
     setSnackbarSeverity("info");
     setOpenSnackbar(true);
   };
 
-  // Callback from OTPVerificationPage after successful OTP verification
   const handleOtpVerified = () => {
-    // In a real application, you would dispatch the actual registration/login action here
-    // using userRegistrationData, or confirm the session if it's a login flow.
-    // For this mock setup, we just log and rely on the auth.user effect for redirection.
     console.log("OTP verified. Proceeding with user flow.");
-    // If you need to dispatch a registration action here, you'd do:
-    // if (userRegistrationData) {
-    //   dispatch(registerAction(userRegistrationData)); // Assuming registerAction is available
-    // }
   };
 
   const handleCloseSnackbar = () => {
@@ -98,9 +83,10 @@ export default function AuthModal({ handleClose, open }) {
           {showOtpInput ? (
             <OTPVerificationPage 
               phoneNumber={userPhoneNumber} 
-              email={userEmail} // Pass email to OTPVerificationPage
+              email={userEmail}
               onOtpVerified={handleOtpVerified} 
-              handleCloseModal={handleClose} // Pass handleClose to OTP page for its close button
+              handleCloseModal={handleClose}
+              registrationData={userRegistrationData}
             />
           ) : location.pathname === "/login" ? (
             <LoginUserForm onAuthSuccess={() => console.log("Login form submitted, handle OTP if needed.")} />

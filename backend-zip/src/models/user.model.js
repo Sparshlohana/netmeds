@@ -17,25 +17,26 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   role: {
     type: String,
-    required:true,
-    default:"CUSTOMER"
+    required: true,
+    default: "CUSTOMER",
   },
   mobile: {
     type: String,
   },
   addresses: [
     {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "addresses",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "addresses",
     },
-  ], 
+  ],
   paymentInformation: [
     {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "payment_information",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "payment_information",
     },
   ],
   ratings: [
@@ -43,7 +44,7 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "ratings",
     },
-  ], 
+  ],
   reviews: [
     {
       type: mongoose.Schema.Types.ObjectId,

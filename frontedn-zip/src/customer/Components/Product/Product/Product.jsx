@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -14,20 +14,12 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Pagination from "@mui/material/Pagination";
-
-import { filters, singleFilter, sortOptions } from "./FilterData";
-import ProductCard from "../ProductCard/ProductCard";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { productdata } from "../../../../data";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import {
-  findProducts,
-  findProductsByCategory,
-} from "../../../../Redux/Customers/Product/Action";
-import { deepPurple } from "@mui/material/colors";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { findProducts } from "../../../../Redux/Customers/Product/Action";
 import BackdropComponent from "../../BackDrop/Backdrop";
+import ProductCard from "../ProductCard/ProductCard";
+import { filters, singleFilter, sortOptions } from "./FilterData";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -37,17 +29,16 @@ export default function Product() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const jwt = localStorage.getItem("jwt");
-  const param = useParams();
   const { customersProduct } = useSelector((store) => store);
   const location = useLocation();
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
+  const param = useParams();
+  const jwt = localStorage.getItem("jwt");
 
   const handleLoderClose = () => {
     setIsLoaderOpen(false);
   };
 
-  // const filter = decodeURIComponent(location.search);
   const decodedQueryString = decodeURIComponent(location.search);
   const searchParams = new URLSearchParams(decodedQueryString);
   const colorValue = searchParams.get("color");
@@ -58,14 +49,13 @@ export default function Product() {
   const pageNumber = searchParams.get("page") || 1;
   const stock = searchParams.get("stock");
 
-  // console.log("location - ", colorValue, sizeValue,price,disccount);
-
   const handleSortChange = (value) => {
     const searchParams = new URLSearchParams(location.search);
     searchParams.set("sort", value);
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
   };
+
   const handlePaginationChange = (event, value) => {
     const searchParams = new URLSearchParams(location.search);
     searchParams.set("page", value);
@@ -84,7 +74,7 @@ export default function Product() {
       maxPrice: maxPrice || 10000,
       minDiscount: disccount || 0,
       sort: sortValue || "price_low",
-      pageNumber: pageNumber ,
+      pageNumber: pageNumber,
       pageSize: 10,
       stock: stock,
     };
@@ -98,11 +88,13 @@ export default function Product() {
     sortValue,
     pageNumber,
     stock,
+    dispatch,
+    location.search,
+    param.lavelThree,
   ]);
 
   const handleFilter = (value, sectionId) => {
     const searchParams = new URLSearchParams(location.search);
-
     let filterValues = searchParams.getAll(sectionId);
 
     if (filterValues.length > 0 && filterValues[0].split(",").includes(value)) {
@@ -112,17 +104,12 @@ export default function Product() {
       if (filterValues.length === 0) {
         searchParams.delete(sectionId);
       }
-      console.log("includes");
     } else {
-      // Remove all values for the current section
-      // searchParams.delete(sectionId);
       filterValues.push(value);
     }
-
     if (filterValues.length > 0)
       searchParams.set(sectionId, filterValues.join(","));
 
-    // history.push({ search: searchParams.toString() });
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
   };
@@ -143,7 +130,7 @@ export default function Product() {
   }, [customersProduct.loading]);
 
   return (
-    <div className="bg-white -z-20 ">
+    <div className="bg-white -z-20">
       <div>
         {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -196,7 +183,6 @@ export default function Product() {
                         as="div"
                         key={section.id}
                         className="border-t border-gray-200 px-4 py-6"
-                        // open={false}
                       >
                         {({ open }) => (
                           <>
@@ -233,7 +219,7 @@ export default function Product() {
                                       defaultValue={option.value}
                                       type="checkbox"
                                       defaultChecked={option.checked}
-                                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                      className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
                                       onChange={() =>
                                         handleFilter(option.value, section.id)
                                       }
@@ -241,7 +227,6 @@ export default function Product() {
                                     <label
                                       htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
                                       className="ml-3 min-w-0 flex-1 text-gray-500"
-                                      // onClick={()=>handleFilter(option.value,section.id)}
                                     >
                                       {option.label}
                                     </label>
@@ -260,7 +245,7 @@ export default function Product() {
           </Dialog>
         </Transition.Root>
 
-        <main className="mx-auto px-4 lg:px-14 ">
+        <main className="mx-auto px-4 lg:px-14">
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-6">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">
               Product
@@ -277,7 +262,6 @@ export default function Product() {
                     />
                   </Menu.Button>
                 </div>
-
                 <Transition
                   as={Fragment}
                   enter="transition ease-out duration-100"
@@ -334,7 +318,6 @@ export default function Product() {
             <h2 id="products-heading" className="sr-only">
               Products
             </h2>
-
             <div>
               <h2 className="py-5 font-semibold opacity-60 text-lg">Filters</h2>
               <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
@@ -342,7 +325,6 @@ export default function Product() {
                 <form className="hidden lg:block border rounded-md p-5">
                   {filters.map((section) => (
                     <Disclosure
-                      // defaultOpen={false}
                       as="div"
                       key={section.id}
                       className="border-b border-gray-200 py-6"
@@ -382,7 +364,7 @@ export default function Product() {
                                     defaultValue={option.value}
                                     type="checkbox"
                                     defaultChecked={option.checked}
-                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
                                     onChange={() =>
                                       handleFilter(option.value, section.id)
                                     }
@@ -403,7 +385,6 @@ export default function Product() {
                   ))}
                   {singleFilter.map((section) => (
                     <Disclosure
-                      // defaultOpen={true}
                       as="div"
                       key={section.id}
                       className="border-b border-gray-200 py-6"
@@ -440,7 +421,7 @@ export default function Product() {
                                 {section.options.map((option, optionIdx) => (
                                   <FormControlLabel
                                     value={option.value}
-                                    control={<Radio />}
+                                    control={<Radio sx={{ color: '#008000', '&.Mui-checked': { color: '#008000' } }} />}
                                     label={option.label}
                                     onChange={(e) =>
                                       handleRadioFilterChange(e, section.id)
@@ -457,8 +438,8 @@ export default function Product() {
                 </form>
 
                 {/* Product grid */}
-                <div className="lg:col-span-4 w-full ">
-                  <div className="flex flex-wrap justify-center bg-white border py-5 rounded-md ">
+                <div className="lg:col-span-4 w-full">
+                  <div className="flex flex-wrap justify-center bg-white border py-5 rounded-md">
                     {customersProduct?.products?.content?.map((item) => (
                       <ProductCard product={item} />
                     ))}
@@ -467,24 +448,25 @@ export default function Product() {
               </div>
             </div>
           </section>
+
+          {/* pagination section */}
+          <section className="w-full px-[3.6rem]">
+            <div className="mx-auto px-4 py-5 flex justify-center shadow-lg border rounded-md">
+              <Pagination
+                count={customersProduct.products?.totalPages}
+                color="primary"
+                className=""
+                onChange={handlePaginationChange}
+                sx={{ '& .MuiPaginationItem-root.Mui-selected': { bgcolor: '#008000', color: 'white' } }}
+              />
+            </div>
+          </section>
+
+          {/* {backdrop} */}
+          <section>
+            <BackdropComponent open={isLoaderOpen} />
+          </section>
         </main>
-
-        {/* pagination section */}
-        <section className="w-full px-[3.6rem]">
-          <div className="mx-auto px-4 py-5 flex justify-center shadow-lg border rounded-md">
-            <Pagination
-              count={customersProduct.products?.totalPages}
-              color="primary"
-              className=""
-              onChange={handlePaginationChange}
-            />
-          </div>
-        </section>
-
-        {/* {backdrop} */}
-        <section>
-         <BackdropComponent open={isLoaderOpen}/>
-        </section>
       </div>
     </div>
   );

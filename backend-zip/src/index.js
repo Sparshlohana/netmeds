@@ -1,20 +1,23 @@
-const express = require("express")
-const cors = require('cors');
+// index.js
+
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
-app.use(express.json())
-app.use(cors())
+app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
-    return res.status(200).send({ message: "welcome to ecommerce api - node" })
-})
+  return res.status(200).send({ message: "welcome to ecommerce api - node" });
+});
 
-const authRouter = require("./routes/auth.routes.js")
-app.use("/auth", authRouter)
+const authRouter = require("./routes/auth.routes.js");
+// CORRECTED: The auth router now uses the /api prefix, just like all other API routes
+app.use("/api/auth", authRouter);
 
 const userRouter = require("./routes/user.routes.js");
-app.use("/api/users", userRouter)
+app.use("/api/users", userRouter);
 
 const productRouter = require("./routes/product.routes.js");
 app.use("/api/products", productRouter);
@@ -22,17 +25,17 @@ app.use("/api/products", productRouter);
 const adminProductRouter = require("./routes/product.admin.routes.js");
 app.use("/api/admin/products", adminProductRouter);
 
-const cartRouter = require("./routes/cart.routes.js")
+const cartRouter = require("./routes/cart.routes.js");
 app.use("/api/cart", cartRouter);
 
-const cartItemRouter = require("./routes/cartItem.routes.js")
+const cartItemRouter = require("./routes/cartItem.routes.js");
 app.use("/api/cart_items", cartItemRouter);
 
 const orderRouter = require("./routes/order.routes.js");
 app.use("/api/orders", orderRouter);
 
 const paymentRouter = require("./routes/payment.routes.js");
-app.use('/api/payments', paymentRouter)
+app.use("/api/payments", paymentRouter);
 
 const reviewRouter = require("./routes/review.routes.js");
 app.use("/api/reviews", reviewRouter);
