@@ -6,8 +6,8 @@ import RegisterUserForm from "./Register";
 import LoginUserForm from "./Login";
 import OTPVerificationPage from "./OTPVerificationPage";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Alert, Snackbar } from "@mui/material";
 
 const style = {
@@ -19,27 +19,28 @@ const style = {
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
-  borderRadius: "8px", // Added border-radius for consistency
+  borderRadius: "8px",
 };
 
-export default function AuthModal({ handleClose, open }) {
-  const location = useLocation();
-  const { auth } = useSelector((store) => store);
+export default function AuthModal({ handleClose, open, isLogin }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { auth } = useSelector((store) => store);
 
   const [showOtpInput, setShowOtpInput] = useState(false);
-  const [userPhoneNumber, setUserPhoneNumber] = useState('');
-  const [userEmail, setUserEmail] = useState('');
   const [userRegistrationData, setUserRegistrationData] = useState(null);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
+  // This function will be passed to both login and register forms.
+  const handleAuthSuccess = () => {
+    handleClose(); // Close the modal
+  };
+
   useEffect(() => {
     if (auth.user) {
-      handleClose();
+      // Navigate to admin or home page on successful login/registration
       if (auth.user?.role === "ADMIN") {
         navigate('/admin');
       } else {
@@ -52,20 +53,14 @@ export default function AuthModal({ handleClose, open }) {
     }
   }, [auth.user, auth.error, handleClose, navigate]);
 
-  const handleRegistrationSuccess = (phoneNumber, email, registrationData) => {
-    setUserPhoneNumber(phoneNumber);
-    setUserEmail(email);
+  const handleRegistrationSuccess = (registrationData) => {
     setUserRegistrationData(registrationData);
     setShowOtpInput(true);
-    setSnackbarMessage(`OTP sent to ${email}!`);
+    setSnackbarMessage(`OTP sent to ${registrationData.email}!`);
     setSnackbarSeverity("info");
     setOpenSnackbar(true);
   };
-
-  const handleOtpVerified = () => {
-    console.log("OTP verified. Proceeding with user flow.");
-  };
-
+  
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
     setSnackbarMessage("");
@@ -82,14 +77,12 @@ export default function AuthModal({ handleClose, open }) {
         <Box className="rounded-md" sx={style}>
           {showOtpInput ? (
             <OTPVerificationPage 
-              phoneNumber={userPhoneNumber} 
-              email={userEmail}
-              onOtpVerified={handleOtpVerified} 
-              handleCloseModal={handleClose}
               registrationData={userRegistrationData}
+              handleCloseModal={handleClose}
             />
-          ) : location.pathname === "/login" ? (
-            <LoginUserForm onAuthSuccess={() => console.log("Login form submitted, handle OTP if needed.")} />
+          ) : isLogin ? (
+            // Pass the callback to the LoginUserForm
+            <LoginUserForm onAuthSuccess={handleAuthSuccess} />
           ) : (
             <RegisterUserForm onRegistrationSuccess={handleRegistrationSuccess} />
           )}

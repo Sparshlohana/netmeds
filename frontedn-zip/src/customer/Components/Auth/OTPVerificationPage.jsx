@@ -1,30 +1,28 @@
-// Create a new file for this component: components/Auth/OtpVerification.jsx
+// components/Auth/OTPVerificationPage.jsx
 import React, { useState } from "react";
 import { Grid, TextField, Button, Box, Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { register } from "../../../Redux/Auth/Action";
+import { useDispatch } from "react-redux";
+import { verifyOtpAndRegister } from "../../../Redux/Auth/Action";
 
-export default function OtpVerification({ registrationData, onVerificationSuccess }) {
+export default function OTPVerificationPage({ registrationData, handleCloseModal }) {
   const dispatch = useDispatch();
-  const { auth } = useSelector((store) => store);
   const [otp, setOtp] = useState("");
 
   const handleOtpSubmit = (event) => {
     event.preventDefault();
     const data = { ...registrationData, otp };
     
-    // Dispatch the Redux action to register the user with OTP
-    dispatch(register(data));
-
-    // Optional: Call onVerificationSuccess if the registration is successful
-    // This is handled by the Redux state in the parent component.
-    // The parent component should listen to changes in auth.user to know when to navigate away.
+    // Dispatch the new Redux action to verify OTP and register the user
+    dispatch(verifyOtpAndRegister(data));
+    handleCloseModal(); // Close the modal
   };
 
   return (
     <Box sx={{ mt: 5 }}>
       <Typography variant="h5" component="h2" sx={{ mb: 3, textAlign: 'center' }}>Verify OTP</Typography>
-      <Typography variant="body1" sx={{ textAlign: 'center', mb: 2 }}>An OTP has been sent to your email.</Typography>
+      <Typography variant="body1" sx={{ textAlign: 'center', mb: 2 }}>
+        An OTP has been sent to your email: <br/> <strong>{registrationData.email}</strong>
+      </Typography>
       <form onSubmit={handleOtpSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12}>

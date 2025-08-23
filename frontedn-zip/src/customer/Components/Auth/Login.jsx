@@ -10,20 +10,25 @@ import { useEffect } from "react";
 export default function LoginUserForm({ onAuthSuccess }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const jwt = localStorage.getItem("jwt");
   const { auth } = useSelector((store) => store);
 
-useEffect(() => {
+  // This hook is for fetching the user profile on initial load if a JWT exists.
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
     if (jwt) {
       dispatch(getUser(jwt));
     }
-}, [jwt, dispatch]);
+  }, [dispatch]);
 
+  // This hook now correctly handles success and error states
   useEffect(() => {
-    if (auth.user && !auth.error && onAuthSuccess) {
-      onAuthSuccess();
+    if (auth.user) {
+      // If the user object is populated, the login was successful.
+      if (onAuthSuccess) {
+        onAuthSuccess();
+      }
     }
-  }, [auth.user, auth.error, onAuthSuccess]);
+  }, [auth.user, onAuthSuccess]);
 
 
   const handleSubmit = (event) => {
@@ -36,6 +41,7 @@ useEffect(() => {
     };
     console.log("login user", userData);
 
+    // Dispatch the login action
     dispatch(login(userData));
   };
 

@@ -1,82 +1,121 @@
 // src/controllers/auth.controller.js
-
-const userService = require("../services/user.service.js");
-const jwtProvider = require("../config/jwtProvider.js");
+const userService = require("../services/user.service");
+const jwtProvider = require("../config/jwtProvider");
 const bcrypt = require("bcrypt");
-const cartService = require("../services/cart.service.js");
+const cartService = require("../services/cart.service");
 const otpService = require("../services/otp.service");
 
-const register = async (req, res) => {
+
+
+const requestOtp = async (req, res) => {
   try {
-    const user = await userService.createUser(req.body);
+    const { email } = req.body;
+    
+    // Log the incoming email to confirm it's present
+    console.log("Received OTP request for email:", email); 
+
+    const user = await userService.getUserByEmail(email);
+
+    if (user) {
+      return res
+        .status(409)
+        .send({ message: "An account with this email already exists." });
+    }
+
+    // Add a log before calling the service
+    console.log("Attempting to create and send OTP...");
+    await otpService.createAndSendOtp(email);
+    console.log("OTP successfully created and sent.");
+
+    return res
+      .status(200)
+      .send({ message: "OTP sent successfully to your email." });
+  } catch (error) {
+    // This is the most important log. It will show you the exact error.
+    console.error("Error in requestOtp controller:", error);
+    return res.status(500).send({ error: error.message || "Internal Server Error" });
+  }
+};
+
+const verifyOtpAndRegister = async (req, res) => {
+  try {
+    const { firstName, lastName, email, password, otp, phoneNumber } = req.body; // Added phoneNumber
+
+    // 1. Verify the OTP
+    await otpService.verifyOtp(email, otp);
+
+    // 2. Create the user
+    // Check if user already exists after OTP verification (edge case for race conditions)
+    const isUserExist = await userService.getUserByEmail(email);
+    if (isUserExist) {
+      return res
+        .status(409)
+        .send({ message: "An account with this email already exists." });
+    }
+
+    // Create user with all registration data, including phoneNumber
+    const user = await userService.createUser({
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
+    });
     const jwt = jwtProvider.generateToken(user._id);
     await cartService.createCart(user);
-    return res.status(200).send({ jwt, message: "register success" });
+
+    return res
+      .status(201)
+      .send({ jwt, message: "Registration successful.", user });
   } catch (error) {
+    console.error("Error in verifyOtpAndRegister:", error.message);
     return res.status(500).send({ error: error.message });
   }
 };
 
 const login = async (req, res) => {
-  const { password, email } = req.body;
+  const { email, password } = req.body;
+
   try {
-    const user = await userService.findUserByEmail(email); // Corrected to use findUserByEmail
+    const user = await userService.getUserByEmail(email);
+
     if (!user) {
       return res
         .status(404)
-        .json({ message: "User not found with this email" });
+        .send({ message: "User not found with this email" });
     }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
+
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).send({ message: "Invalid password" });
     }
+
     const jwt = jwtProvider.generateToken(user._id);
-    return res.status(200).send({ jwt, message: "login success" });
+    return res.status(200).send({ jwt, message: "Login successful.", user });
   } catch (error) {
+    console.error("Error in login:", error.message);
     return res.status(500).send({ error: error.message });
   }
 };
 
-// New function to request OTP
-const requestOtp = async (req, res) => {
+const getUserProfile = async (req, res) => {
   try {
-    const { email } = req.body;
-    const user = await userService.findUserByEmail(email);
-
-    if (!user) {
-      return res
-        .status(404)
-        .json({ message: "User not found with this email." });
+    const jwt = req.headers.authorization.split(" ")[1]; // Assuming bearer token
+    if (!jwt) {
+      return res.status(404).send({ error: "Token not found" });
     }
-
-    await otpService.createAndSendOtp(email);
-    return res.status(200).json({ message: "OTP sent to your email." });
+    const user = await userService.getUserProfileByToken(jwt);
+    return res.status(200).send(user);
   } catch (error) {
-    // Return 500 for server-side issues
-    return res.status(500).json({ error: error.message });
-  }
-};
-
-// New function to verify OTP and log in
-const verifyOtpAndLogin = async (req, res) => {
-  try {
-    const { email, otp } = req.body;
-    const isOtpValid = await otpService.verifyOtp(email, otp);
-
-    if (isOtpValid) {
-      const user = await userService.findUserByEmail(email);
-      const token = jwtProvider.generateToken(user._id);
-      return res.status(200).json({ message: "Login successful.", jwt: token });
-    }
-  } catch (error) {
-    // Return 400 for validation errors (Invalid/Expired OTP)
-    return res.status(400).json({ error: error.message });
+    console.error("Error in getUserProfile:", error.message);
+    return res.status(500).send({ error: error.message });
   }
 };
 
 module.exports = {
-  register,
-  login,
   requestOtp,
-  verifyOtpAndLogin,
+  verifyOtpAndRegister,
+  login,
+  getUserProfile,
 };

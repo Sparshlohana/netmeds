@@ -1,8 +1,8 @@
 import { Grid, TextField, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getUser, register } from "../../../Redux/Auth/Action";
 import { Fragment, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "../../../Redux/Auth/Action";
 
 const API_BASE_URL = "http://localhost:5454/api";
 
@@ -39,29 +39,28 @@ export default function RegisterUserForm({ onRegistrationSuccess }) {
     console.log("User registration data:", userData);
 
     try {
-        const response = await fetch(`${API_BASE_URL}/auth/otp/request`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: userData.email }),
-        });
+      const response = await fetch(`${API_BASE_URL}/auth/otp/request`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: userData.email }),
+      });
 
-        const responseData = await response.json();
+      const responseData = await response.json();
 
-        if (response.ok) {
-            console.log("OTP request successful:", responseData.message);
-            if (onRegistrationSuccess) {
-                // Pass all user data and phone number to the next step
-                onRegistrationSuccess(userData.phoneNumber, userData.email, userData);
-            }
-        } else {
-            console.error("OTP request failed:", responseData.error);
-            alert(responseData.message || "Failed to send OTP.");
+      if (response.ok) {
+        console.log("OTP request successful:", responseData.message);
+        if (onRegistrationSuccess) {
+          onRegistrationSuccess(userData);
         }
+      } else {
+        console.error("OTP request failed:", responseData.message);
+        alert(responseData.message || "Failed to send OTP.");
+      }
     } catch (error) {
-        console.error("Network or server error:", error);
-        alert("Failed to connect to the server.");
+      console.error("Network or server error:", error);
+      alert("Failed to connect to the server.");
     }
   };
 

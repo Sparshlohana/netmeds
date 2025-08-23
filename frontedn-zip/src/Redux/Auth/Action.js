@@ -15,17 +15,20 @@ import api, { API_BASE_URL } from "../../config/api";
 
 // Register action creators
 const registerRequest = () => ({ type: REGISTER_REQUEST });
-// CORRECTED: Pass the entire response data as payload
 const registerSuccess = (data) => ({ type: REGISTER_SUCCESS, payload: data });
 const registerFailure = (error) => ({ type: REGISTER_FAILURE, payload: error });
 
-export const register = (userData) => async (dispatch) => {
+// New action to verify OTP and complete registration
+export const verifyOtpAndRegister = (userData) => async (dispatch) => {
   dispatch(registerRequest());
   try {
-    const response = await axios.post(`${API_BASE_URL}/auth/signup`, userData);
+    const response = await axios.post(
+      `${API_BASE_URL}/auth/otp/verify-and-register`,
+      userData
+    );
     const data = response.data;
     if (data.jwt) localStorage.setItem("jwt", data.jwt);
-    console.log("registerr :", data); // CORRECTED: Dispatch the full data object
+    console.log("registration success:", data);
     dispatch(registerSuccess(data));
   } catch (error) {
     dispatch(registerFailure(error.message));
@@ -34,20 +37,21 @@ export const register = (userData) => async (dispatch) => {
 
 // Login action creators
 const loginRequest = () => ({ type: LOGIN_REQUEST });
-// CORRECTED: Pass the entire response data as payload
 const loginSuccess = (data) => ({ type: LOGIN_SUCCESS, payload: data });
 const loginFailure = (error) => ({ type: LOGIN_FAILURE, payload: error });
 
+// Corrected code
 export const login = (userData) => async (dispatch) => {
   dispatch(loginRequest());
   try {
-    const response = await axios.post(`${API_BASE_URL}/auth/signin`, userData);
+    const response = await axios.post(`${API_BASE_URL}/api/auth/signin`, userData);
     const data = response.data;
     if (data.jwt) localStorage.setItem("jwt", data.jwt);
-    console.log("login ", data); // CORRECTED: Dispatch the full data object
+    console.log("login success:", data); // Corrected log message for clarity
     dispatch(loginSuccess(data));
   } catch (error) {
-    dispatch(loginFailure(error.message));
+    console.error("Login failed:", error.response.data); // Log the specific error from the server
+    dispatch(loginFailure(error.response.data.message || error.message));
   }
 };
 
@@ -71,7 +75,7 @@ export const getUser = (token) => {
   };
 };
 
-export const logout = (token) => {
+export const logout = () => {
   return async (dispatch) => {
     dispatch({ type: LOGOUT });
     localStorage.clear();
